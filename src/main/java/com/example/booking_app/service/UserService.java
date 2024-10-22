@@ -7,7 +7,6 @@ import com.example.booking_app.exception.AppException;
 import com.example.booking_app.exception.ErrorCode;
 import com.example.booking_app.mapper.UserMapper;
 import com.example.booking_app.repository.UserRepository;
-//import org.springframework.security.crypto.password.PasswordEncoder;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -23,7 +22,6 @@ import java.util.List;
 public class UserService {
     UserRepository userRepository;
     UserMapper userMapper;
-//    PasswordEncoder passwordEncoder;
 
     public List<UserResponse> getAllUsers() {
         return userRepository.findAll().stream()

@@ -30,7 +30,6 @@ public class UserCreationRequest {
 
     String birthPlace;
     String address;
-//    List<String> roles = List.of("USER");
     boolean active = true;
     Date onCreate = new Date();
     Date onUpdate = new Date();

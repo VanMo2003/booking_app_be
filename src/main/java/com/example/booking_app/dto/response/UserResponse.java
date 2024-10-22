@@ -22,11 +22,6 @@ public class UserResponse {
     LocalDate dateOfBirth;
     String birthPlace;
     String address;
-//    Set<RoleResponse> roles;
-
-//    @JsonInclude(JsonInclude.Include.NON_NULL)
-//    FootballPitchesResponse footballPitches;
-
     boolean active;
     Date onCreate;
     Date onUpdate;

@@ -27,10 +27,6 @@ public class User {
     LocalDate dateOfBirth;
     String birthPlace;
     String address;
-
-//    @ManyToMany
-//    Set<Role> roles;
-
     boolean active;
     Date onCreate;
     Date onUpdate;
