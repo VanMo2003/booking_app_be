@@ -6,6 +6,7 @@ import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -27,6 +28,8 @@ public class User {
     LocalDate dateOfBirth;
     String birthPlace;
     String address;
+    @ManyToMany
+    Set<Role> roles;
     boolean active;
     Date onCreate;
     Date onUpdate;

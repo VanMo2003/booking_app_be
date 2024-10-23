@@ -11,3 +11,7 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+jwt:
+  signer-key: "4AEDiq/xZcnqW7vryody9FTkI2droddl/Kw3FdvUkj6FKuNco86S0y1R567jIfLE"
+  valid-duration: 86400 # in second
+  refreshable-duration: 864000
