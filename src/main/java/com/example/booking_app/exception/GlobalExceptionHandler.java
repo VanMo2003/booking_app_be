@@ -1,6 +1,8 @@
 package com.example.booking_app.exception;
 
-import com.example.booking_app.dto.response.ApiResponse;
+import java.nio.file.AccessDeniedException;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -8,8 +10,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.nio.file.AccessDeniedException;
-import java.util.Map;
+import com.example.booking_app.dto.response.ApiResponse;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -53,18 +54,18 @@ public class GlobalExceptionHandler {
         ErrorCode errorCode = ErrorCode.INVALID_KEY;
 
         errorCode = ErrorCode.valueOf(enumKey);
-//        var constrainViolations = e.getBindingResult().getAllErrors().getFirst().toString();
-//
-//        var attributes = constrainViolations.getConstraintDescriptor().getAttributes();
-//
-//        log.info(attributes.toString());
+        //        var constrainViolations = e.getBindingResult().getAllErrors().getFirst().toString();
+        //
+        //        var attributes = constrainViolations.getConstraintDescriptor().getAttributes();
+        //
+        //        log.info(attributes.toString());
 
         ApiResponse apiResponse = new ApiResponse();
-//        apiResponse.setCode(errorCode.getCode());
-//        apiResponse.setMessage(
-//                Objects.nonNull(attributes)
-//                        ? mapAttribute(errorCode.getMessage(), attributes)
-//                        : errorCode.getMessage());
+        //        apiResponse.setCode(errorCode.getCode());
+        //        apiResponse.setMessage(
+        //                Objects.nonNull(attributes)
+        //                        ? mapAttribute(errorCode.getMessage(), attributes)
+        //                        : errorCode.getMessage());
         return ResponseEntity.badRequest().body(apiResponse);
     }
 
