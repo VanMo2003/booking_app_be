@@ -1,16 +1,18 @@
 package com.example.booking_app.config;
 
-import com.example.booking_app.dto.response.ApiResponse;
-import com.example.booking_app.exception.ErrorCode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 
-import java.io.IOException;
+import com.example.booking_app.dto.response.ApiResponse;
+import com.example.booking_app.exception.ErrorCode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override

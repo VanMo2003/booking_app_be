@@ -1,6 +1,8 @@
 package com.example.booking_app.entity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 import lombok.*;
@@ -13,9 +15,15 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Permission {
+public class Hotel {
     @Id
-    String name;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    Long id;
 
+    String pathImage;
+    String nameHotel;
+    String address;
     String description;
+    double price;
+    int numberOfRoom;
 }
