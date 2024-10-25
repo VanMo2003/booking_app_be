@@ -1,10 +1,9 @@
 package com.example.booking_app.config;
 
-import com.example.booking_app.dto.request.IntrospectRequest;
-import com.example.booking_app.exception.AppException;
-import com.example.booking_app.exception.ErrorCode;
-import com.example.booking_app.service.AuthenticationService;
-import com.nimbusds.jose.JOSEException;
+import java.text.ParseException;
+import java.util.Objects;
+import javax.crypto.spec.SecretKeySpec;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -13,9 +12,11 @@ import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.stereotype.Component;
 
-import javax.crypto.spec.SecretKeySpec;
-import java.text.ParseException;
-import java.util.Objects;
+import com.example.booking_app.dto.request.IntrospectRequest;
+import com.example.booking_app.exception.AppException;
+import com.example.booking_app.exception.ErrorCode;
+import com.example.booking_app.service.AuthenticationService;
+import com.nimbusds.jose.JOSEException;
 
 @Component
 public class CustomJwtDecoder implements JwtDecoder {
