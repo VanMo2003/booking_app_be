@@ -10,9 +10,11 @@ import com.example.booking_app.mapper.HotelMapper;
 import com.example.booking_app.mapper.UserMapper;
 import com.example.booking_app.repository.HotelRepository;
 import com.example.booking_app.repository.UserRepository;
+import com.example.booking_app.specification.UserSpecification;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
@@ -27,10 +29,9 @@ public class HotelService {
     UserRepository userRepository;
     HotelMapper hotelMapper;
     UserMapper userMapper;
-
     public List<HotelResponse> getAllHotel(){
         return hotelRepository.findAll().stream().map(hotel ->
-             hotelMapper.toFootballPitchesResponse(hotel)
+             hotelMapper.toHotelResponse(hotel)
         ).toList();
     }
 
@@ -42,11 +43,11 @@ public class HotelService {
         if (hotelRepository.existsByUserId(request.getUserID()))
             throw new AppException(ErrorCode.USER_EXISTED);
 
-        Hotel hotel = hotelMapper.toFootballPitches(request);
+        Hotel hotel = hotelMapper.toHotel(request);
 
         hotel.setUser(user);
 
-        HotelResponse hotelResponse = hotelMapper.toFootballPitchesResponse(hotelRepository.save(hotel));
+        HotelResponse hotelResponse = hotelMapper.toHotelResponse(hotelRepository.save(hotel));
         hotelResponse.setUser(userMapper.toUserResponse(user));
 
         return hotelResponse;
@@ -54,7 +55,7 @@ public class HotelService {
     public HotelResponse updateHotel(Long id,HotelRequest request){
         Hotel hotel = hotelRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.HOTEL_NOT_EXISTED));
 
-        hotelMapper.updateFootballPitches(hotel, request);
+        hotelMapper.updateHotel(hotel, request);
 
         User user;
         if (!Objects.isNull(request.getUserID())) {
@@ -65,10 +66,23 @@ public class HotelService {
         }
 
 
-        HotelResponse hotelResponse = hotelMapper.toFootballPitchesResponse(hotelRepository.save(hotel));
+        HotelResponse hotelResponse = hotelMapper.toHotelResponse(hotelRepository.save(hotel));
         hotelResponse.setUser(userMapper.toUserResponse(hotel.getUser()));
 
         return hotelResponse;
+    }
+
+    public List<HotelResponse> searchHotelByName(String name){
+        return hotelRepository.findAll(UserSpecification.hasSimilarName(name)).stream().map(hotel -> hotelMapper.toHotelResponse(hotel)).toList();
+    }
+
+    public List<HotelResponse> searchHotelByAddress(String address){
+        return hotelRepository.findAll(UserSpecification.hasSimilarAddress(address)).stream().map(hotel -> hotelMapper.toHotelResponse(hotel)).toList();
+    }
+
+    public List<HotelResponse> searchUsersByNameAndAddress(String name, String address) {
+        Specification<Hotel> spec = UserSpecification.hasSimilarNameAndAddress(name, address);
+        return hotelRepository.findAll().stream().map(hotel -> hotelMapper.toHotelResponse(hotel)).toList();
     }
 
     @PreAuthorize("hasRole('ADMIN')") // chặn trước khi gọi hàm để kiểm tra role
