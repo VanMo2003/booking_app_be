@@ -73,16 +73,28 @@ public class HotelService {
     }
 
     public List<HotelResponse> searchHotelByName(String name){
-        return hotelRepository.findAll(UserSpecification.hasSimilarName(name)).stream().map(hotel -> hotelMapper.toHotelResponse(hotel)).toList();
+        Specification<Hotel> spec = UserSpecification.hasSimilarName(name);
+        List<Hotel> hotels = hotelRepository.findAll(spec);
+        List<HotelResponse> hotelResponses = hotels.stream().map(hotel ->
+                hotelMapper.toHotelResponse(hotel)
+        ).toList();
+
+        return hotelResponses;
     }
 
     public List<HotelResponse> searchHotelByAddress(String address){
-        return hotelRepository.findAll(UserSpecification.hasSimilarAddress(address)).stream().map(hotel -> hotelMapper.toHotelResponse(hotel)).toList();
+        Specification<Hotel> spec = UserSpecification.hasSimilarAddress(address);
+        List<Hotel> hotels = hotelRepository.findAll(spec);
+        List<HotelResponse> hotelResponses = hotels.stream().map(hotel ->
+                hotelMapper.toHotelResponse(hotel)
+        ).toList();
+
+        return hotelResponses;
     }
 
     public List<HotelResponse> searchUsersByNameAndAddress(String name, String address) {
         Specification<Hotel> spec = UserSpecification.hasSimilarNameAndAddress(name, address);
-        return hotelRepository.findAll().stream().map(hotel -> hotelMapper.toHotelResponse(hotel)).toList();
+        return hotelRepository.findAll(spec).stream().map(hotel -> hotelMapper.toHotelResponse(hotel)).toList();
     }
 
     @PreAuthorize("hasRole('ADMIN')") // chặn trước khi gọi hàm để kiểm tra role
