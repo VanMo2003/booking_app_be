@@ -1,5 +1,7 @@
 package com.example.booking_app.config;
 
+import javax.crypto.spec.SecretKeySpec;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,8 +19,6 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
-import javax.crypto.spec.SecretKeySpec;
-
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -27,14 +27,9 @@ public class SecurityConfig {
     @Value("${jwt.signer-key}")
     private String SIGNER_KEY;
 
-    private final String[] PUBLIC_ENDPOINT_GET = {
-            "/users/checkExistUser/{}",
-            "/storage/{}"
-    };
+    private final String[] PUBLIC_ENDPOINT_GET = {"/users/checkExistUser/{}", "/storage/{}"};
     private final String[] PUBLIC_ENDPOINT_POST = {
-        "/users",
-        "/auth/login", "/auth/introspect", "/auth/logout", "/auth/refreshToken",
-        "/storage/upload"
+        "/users", "/auth/login", "/auth/introspect", "/auth/logout", "/auth/refreshToken", "/storage/upload"
     };
 
     private final CustomJwtDecoder customJwtDecoder;
@@ -47,7 +42,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeHttpRequests(request -> request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINT_POST)
                 .permitAll()
-                						.requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINT_GET).permitAll()
+                .requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINT_GET)
+                .permitAll()
                 .anyRequest()
                 .authenticated());
 

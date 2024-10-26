@@ -1,5 +1,11 @@
 package com.example.booking_app.service;
 
+import java.util.List;
+
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
 import com.example.booking_app.dto.request.UserCreationRequest;
 import com.example.booking_app.dto.response.UserResponse;
 import com.example.booking_app.entity.User;
@@ -8,16 +14,12 @@ import com.example.booking_app.exception.ErrorCode;
 import com.example.booking_app.mapper.UserMapper;
 import com.example.booking_app.repository.RoleRepository;
 import com.example.booking_app.repository.UserRepository;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-
 import java.util.HashSet;
-import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -37,7 +39,8 @@ public class UserService {
                 })
                 .toList();
     }
-    public UserResponse createUser(UserCreationRequest request){
+
+    public UserResponse createUser(UserCreationRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) throw new AppException(ErrorCode.USER_EXISTED);
 
         User user = userMapper.toUser(request);
@@ -51,9 +54,8 @@ public class UserService {
 
     @PreAuthorize("hasRole('ADMIN')")
     public UserResponse getUserById(String id) {
-        UserResponse userResponse = userMapper.toUserResponse(userRepository.findById(id).orElseThrow(
-                () -> new AppException(ErrorCode.USER_NOT_EXISTED)
-        ));
+        UserResponse userResponse = userMapper.toUserResponse(
+                userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED)));
 
         return userResponse;
     }

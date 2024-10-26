@@ -1,10 +1,11 @@
 package com.example.booking_app.dto.response;
 
+import java.util.Set;
+
 import com.example.booking_app.entity.Permission;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.Set;
 
 @Data
 @NoArgsConstructor

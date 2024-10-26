@@ -1,5 +1,14 @@
 package com.example.booking_app.config;
 
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import com.example.booking_app.constant.PredefinedPermission;
 import com.example.booking_app.constant.PredefinedRole;
 import com.example.booking_app.entity.Permission;
@@ -8,19 +17,12 @@ import com.example.booking_app.entity.User;
 import com.example.booking_app.repository.PermissionRepository;
 import com.example.booking_app.repository.RoleRepository;
 import com.example.booking_app.repository.UserRepository;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.ApplicationRunner;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 @Configuration
 @RequiredArgsConstructor
@@ -59,7 +61,6 @@ public class ApplicationInitConfig {
                         .description("Get all permission")
                         .build());
 
-
                 roleRepository.save(Role.builder()
                         .name(PredefinedRole.USER_ROLE)
                         .description("User role")
@@ -92,7 +93,8 @@ public class ApplicationInitConfig {
                         .build();
 
                 userRepository.save(user);
-                log.warn("{ADMIN_USER_NAME} user has been create with default password: {ADMIN_PASSWORD}, please change it");
+                log.warn(
+                        "{ADMIN_USER_NAME} user has been create with default password: {ADMIN_PASSWORD}, please change it");
             }
         };
     }

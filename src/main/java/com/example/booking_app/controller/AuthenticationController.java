@@ -1,5 +1,20 @@
 package com.example.booking_app.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 import com.example.booking_app.dto.request.AuthenticationRequest;
 import com.example.booking_app.dto.request.IntrospectRequest;
 import com.example.booking_app.dto.request.LogoutRequest;
@@ -7,17 +22,14 @@ import com.example.booking_app.dto.request.RefreshTokenRequest;
 import com.example.booking_app.dto.response.ApiResponse;
 import com.example.booking_app.dto.response.AuthenticationResponse;
 import com.example.booking_app.dto.response.IntrospectResponse;
+import com.example.booking_app.entity.Hotel;
+import com.example.booking_app.repository.HotelRepository;
 import com.example.booking_app.service.AuthenticationService;
 import com.nimbusds.jose.JOSEException;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.text.ParseException;
 
 @RestController
 @RequestMapping("/auth")
@@ -25,6 +37,7 @@ import java.text.ParseException;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthenticationController {
     AuthenticationService authenticationService;
+    HotelRepository hotelRepository;
 
     @PostMapping("/login")
     ApiResponse<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
@@ -42,9 +55,7 @@ public class AuthenticationController {
     @PostMapping("/logout")
     ApiResponse<String> logout(@RequestBody LogoutRequest request) throws ParseException, JOSEException {
         authenticationService.logout(request);
-        return ApiResponse.<String>builder()
-                .data("logout success")
-                .build();
+        return ApiResponse.<String>builder().data("logout success").build();
     }
 
     @PostMapping("/refreshToken")
