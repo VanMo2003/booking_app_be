@@ -45,7 +45,7 @@ public class HotelController {
     ApiResponse<List<HotelResponse>> searchByNameHotel(
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "address", required = false) String address){
-        List<HotelResponse> hotels ;
+        List<HotelResponse> hotels;
         if (!StringUtil.isNullOrEmpty(name) && !StringUtil.isNullOrEmpty(address)){
             hotels = hotelService.searchUsersByNameAndAddress(name, address);
         }else if (!StringUtil.isNullOrEmpty(name)){

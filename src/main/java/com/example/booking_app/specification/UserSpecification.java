@@ -10,7 +10,7 @@ import java.util.List;
 public class UserSpecification {
     public static Specification<Hotel> hasSimilarName(String name){
         return (root, query, criteriaBuilder) ->
-                criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + name.toLowerCase() + "%");
+                criteriaBuilder.like(criteriaBuilder.lower(root.get("nameHotel")), "%" + name.toLowerCase() + "%");
     }
 
     public static Specification<Hotel> hasSimilarAddress(String address) {
