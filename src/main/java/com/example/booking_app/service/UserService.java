@@ -6,6 +6,7 @@ import com.example.booking_app.entity.User;
 import com.example.booking_app.exception.AppException;
 import com.example.booking_app.exception.ErrorCode;
 import com.example.booking_app.mapper.UserMapper;
+import com.example.booking_app.repository.RoleRepository;
 import com.example.booking_app.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -22,6 +24,8 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserService {
     UserRepository userRepository;
+    RoleRepository roleRepository;
+    PasswordEncoder passwordEncoder;
     UserMapper userMapper;
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -37,9 +41,10 @@ public class UserService {
         if (userRepository.existsByUsername(request.getUsername())) throw new AppException(ErrorCode.USER_EXISTED);
 
         User user = userMapper.toUser(request);
-
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
+
+        var roles = roleRepository.findAllById(request.getRoles());
+        user.setRoles(new HashSet<>(roles));
 
         return userMapper.toUserResponse(userRepository.save(user));
     }

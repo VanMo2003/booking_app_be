@@ -1,15 +1,17 @@
 package com.example.booking_app.controller;
 
+import ch.qos.logback.core.util.StringUtil;
 import com.example.booking_app.dto.request.HotelRequest;
 import com.example.booking_app.dto.response.ApiResponse;
 import com.example.booking_app.dto.response.HotelResponse;
 import com.example.booking_app.repository.HotelRepository;
+import com.example.booking_app.repository.UserRepository;
 import com.example.booking_app.service.HotelService;
+import com.example.booking_app.service.UserService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -36,6 +38,25 @@ public class HotelController {
     ApiResponse<HotelResponse> updateHotel(@PathVariable Long id, @RequestBody HotelRequest request){
         return ApiResponse.<HotelResponse>builder()
                 .data(hotelService.updateHotel(id, request))
+                .build();
+    }
+
+    @GetMapping("/search")
+    ApiResponse<List<HotelResponse>> searchByNameHotel(
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "address", required = false) String address){
+        List<HotelResponse> hotels ;
+        if (!StringUtil.isNullOrEmpty(name) && !StringUtil.isNullOrEmpty(address)){
+            hotels = hotelService.searchUsersByNameAndAddress(name, address);
+        }else if (!StringUtil.isNullOrEmpty(name)){
+            hotels = hotelService.searchHotelByName(name);
+        }else if (!StringUtil.isNullOrEmpty(address)){
+            hotels = hotelService.searchHotelByAddress(address);
+        }else {
+            hotels = List.of();
+        }
+        return ApiResponse.<List<HotelResponse>>builder()
+                .data(hotels)
                 .build();
     }
 

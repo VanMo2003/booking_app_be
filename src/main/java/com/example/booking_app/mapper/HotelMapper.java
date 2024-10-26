@@ -10,10 +10,10 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring")
 public interface HotelMapper {
     @Mapping(target = "user", ignore = true)
-    Hotel toFootballPitches(HotelRequest request);
+    Hotel toHotel(HotelRequest request);
 
-    HotelResponse toFootballPitchesResponse(Hotel footballPitches);
+    HotelResponse toHotelResponse(Hotel footballPitches);
 
     @Mapping(target = "user", ignore = true)
-    void updateFootballPitches(@MappingTarget Hotel footballPitches, HotelRequest request);
+    void updateHotel(@MappingTarget Hotel footballPitches, HotelRequest request);
 }
