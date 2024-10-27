@@ -1,6 +1,10 @@
 package com.example.booking_app.dto.request;
 
+import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Locale;
+
+import com.example.booking_app.constant.StatusOrder;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -10,16 +14,15 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class HotelRequest {
-    String pathImage;
-    String nameHotel;
-    String address;
-    String description;
-    double price;
+public class OrderBookingRequest {
     int numberOfRoom;
-    String userID;
+    Locale dateCheckIn;
+    Locale dateCheckOut;
+    BigDecimal totalPrice;
+    String userId;
+    Long hotelId;
 
-    boolean active = true;
+    StatusOrder statusOrder = StatusOrder.PENDING;
     Date onCreate = new Date();
     Date onUpdate = new Date();
 }

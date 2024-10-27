@@ -1,13 +1,12 @@
 package com.example.booking_app.entity;
 
+import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
+import java.util.Locale;
 
 import jakarta.persistence.*;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+
+import com.example.booking_app.constant.StatusOrder;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -19,26 +18,27 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Hotel {
+public class OrderBooking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    String pathImage;
-    String nameHotel;
-    String address;
-    String description;
-    double price;
     int numberOfRoom;
+    Locale dateCheckIn;
+    Locale dateCheckOut;
+    BigDecimal totalPrice;
 
-    @OneToOne
+    @Enumerated(EnumType.STRING)
+    StatusOrder statusOrder;
+
+    @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     User user;
 
-    @OneToMany(mappedBy = "hotel")
-    private List<OrderBooking> orderBookings;
+    @ManyToOne
+    @JoinColumn(name = "hotel_id", nullable = false)
+    Hotel hotel;
 
-    boolean active;
     Date onCreate;
     Date onUpdate;
 }

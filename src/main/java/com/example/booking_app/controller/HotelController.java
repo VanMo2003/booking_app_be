@@ -1,18 +1,18 @@
 package com.example.booking_app.controller;
 
-import ch.qos.logback.core.util.StringUtil;
+import java.util.List;
+
+import org.springframework.web.bind.annotation.*;
+
 import com.example.booking_app.dto.request.HotelRequest;
 import com.example.booking_app.dto.response.ApiResponse;
 import com.example.booking_app.dto.response.HotelResponse;
-import com.example.booking_app.repository.HotelRepository;
-import com.example.booking_app.repository.UserRepository;
 import com.example.booking_app.service.HotelService;
-import com.example.booking_app.service.UserService;
+
+import ch.qos.logback.core.util.StringUtil;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
 @RestController
 @RequestMapping("/hotels")
@@ -20,22 +20,23 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class HotelController {
     HotelService hotelService;
+
     @GetMapping
-    ApiResponse<List<HotelResponse>> getAllHotel(){
-        return  ApiResponse.<List<HotelResponse>>builder()
+    ApiResponse<List<HotelResponse>> getAllHotel() {
+        return ApiResponse.<List<HotelResponse>>builder()
                 .data(hotelService.getAllHotel())
                 .build();
     }
 
     @PostMapping
-    ApiResponse<HotelResponse> createHotel(@RequestBody HotelRequest request){
+    ApiResponse<HotelResponse> createHotel(@RequestBody HotelRequest request) {
         return ApiResponse.<HotelResponse>builder()
                 .data(hotelService.createHotel(request))
                 .build();
     }
 
     @PutMapping("/{id}")
-    ApiResponse<HotelResponse> updateHotel(@PathVariable Long id, @RequestBody HotelRequest request){
+    ApiResponse<HotelResponse> updateHotel(@PathVariable Long id, @RequestBody HotelRequest request) {
         return ApiResponse.<HotelResponse>builder()
                 .data(hotelService.updateHotel(id, request))
                 .build();
@@ -44,27 +45,23 @@ public class HotelController {
     @GetMapping("/search")
     ApiResponse<List<HotelResponse>> searchByNameHotel(
             @RequestParam(value = "name", required = false) String name,
-            @RequestParam(value = "address", required = false) String address){
+            @RequestParam(value = "address", required = false) String address) {
         List<HotelResponse> hotels;
-        if (!StringUtil.isNullOrEmpty(name) && !StringUtil.isNullOrEmpty(address)){
+        if (!StringUtil.isNullOrEmpty(name) && !StringUtil.isNullOrEmpty(address)) {
             hotels = hotelService.searchUsersByNameAndAddress(name, address);
-        }else if (!StringUtil.isNullOrEmpty(name)){
+        } else if (!StringUtil.isNullOrEmpty(name)) {
             hotels = hotelService.searchHotelByName(name);
-        }else if (!StringUtil.isNullOrEmpty(address)){
+        } else if (!StringUtil.isNullOrEmpty(address)) {
             hotels = hotelService.searchHotelByAddress(address);
-        }else {
+        } else {
             hotels = List.of();
         }
-        return ApiResponse.<List<HotelResponse>>builder()
-                .data(hotels)
-                .build();
+        return ApiResponse.<List<HotelResponse>>builder().data(hotels).build();
     }
 
     @DeleteMapping("/{id}")
-    ApiResponse<String> deleteHotel(@PathVariable Long id){
+    ApiResponse<String> deleteHotel(@PathVariable Long id) {
         hotelService.deleteHotel(id);
-        return ApiResponse.<String>builder()
-                .data("Hotel has been deleted")
-                .build();
+        return ApiResponse.<String>builder().data("Hotel has been deleted").build();
     }
 }

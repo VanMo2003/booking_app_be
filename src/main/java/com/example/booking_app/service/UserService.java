@@ -1,5 +1,6 @@
 package com.example.booking_app.service;
 
+import java.util.HashSet;
 import java.util.List;
 
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,8 +19,6 @@ import com.example.booking_app.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import java.util.HashSet;
-
 
 @Service
 @RequiredArgsConstructor
