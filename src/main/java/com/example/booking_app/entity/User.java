@@ -2,6 +2,7 @@ package com.example.booking_app.entity;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.*;
@@ -32,6 +33,9 @@ public class User {
 
     @ManyToMany
     Set<Role> roles;
+
+    @OneToMany(mappedBy = "user")
+    private List<OrderBooking> orderBookings;
 
     boolean active;
     Date onCreate;

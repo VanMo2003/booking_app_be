@@ -1,18 +1,7 @@
 package com.example.booking_app.controller;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
 
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.booking_app.dto.request.AuthenticationRequest;
@@ -22,7 +11,6 @@ import com.example.booking_app.dto.request.RefreshTokenRequest;
 import com.example.booking_app.dto.response.ApiResponse;
 import com.example.booking_app.dto.response.AuthenticationResponse;
 import com.example.booking_app.dto.response.IntrospectResponse;
-import com.example.booking_app.entity.Hotel;
 import com.example.booking_app.repository.HotelRepository;
 import com.example.booking_app.service.AuthenticationService;
 import com.nimbusds.jose.JOSEException;

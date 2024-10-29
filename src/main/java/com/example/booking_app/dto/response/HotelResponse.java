@@ -1,7 +1,9 @@
 package com.example.booking_app.dto.response;
 
-import com.example.booking_app.entity.User;
+import java.util.Date;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -20,4 +22,8 @@ public class HotelResponse {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     UserResponse user;
+
+    boolean active;
+    Date onCreate;
+    Date onUpdate;
 }
