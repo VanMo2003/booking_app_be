@@ -1,9 +1,10 @@
 package com.example.booking_app.entity;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
-import java.util.Locale;
 
+import com.example.booking_app.constant.PaymentMethod;
 import jakarta.persistence.*;
 
 import com.example.booking_app.constant.StatusOrder;
@@ -24,12 +25,16 @@ public class OrderBooking {
     Long id;
 
     int numberOfRoom;
-    Locale dateCheckIn;
-    Locale dateCheckOut;
+    LocalDate dateCheckIn;
+    LocalDate dateCheckOut;
     BigDecimal totalPrice;
 
     @Enumerated(EnumType.STRING)
     StatusOrder statusOrder;
+
+    @Enumerated(EnumType.STRING)
+    PaymentMethod paymentMethod;
+
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

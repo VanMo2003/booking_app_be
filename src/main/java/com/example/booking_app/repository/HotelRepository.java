@@ -6,7 +6,10 @@ import org.springframework.stereotype.Repository;
 
 import com.example.booking_app.entity.Hotel;
 
+import java.util.Optional;
+
 @Repository
 public interface HotelRepository extends JpaRepository<Hotel, Long>, JpaSpecificationExecutor<Hotel> {
     boolean existsByUserId(String userId);
+    Optional<Hotel> findByUserId(String userId);
 }

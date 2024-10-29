@@ -14,12 +14,13 @@ public enum ErrorCode {
     INVALID_USERNAME(1004, "Username must be at least {min} character", HttpStatus.BAD_REQUEST),
     INVALID_PASSWORD(1005, "password must be al least {min} characters", HttpStatus.BAD_REQUEST),
     INVALID_DOB(1006, "Your age must be at least {min}", HttpStatus.BAD_REQUEST),
-    USER_EXISTED(1007, "User existed", HttpStatus.BAD_REQUEST),
-    HOTEL_EXISTED(1008, "Hotel existed", HttpStatus.BAD_REQUEST),
+    INCORRECT_ACCOUNT_OR_PASSWORD(107, "Incorrect account or password", HttpStatus.BAD_REQUEST),
+    USER_EXISTED(1008, "User existed", HttpStatus.BAD_REQUEST),
+    HOTEL_EXISTED(1009, "Hotel existed", HttpStatus.BAD_REQUEST),
 
-    USER_NOT_EXISTED(1009, "User not exists", HttpStatus.NOT_FOUND),
-    HOTEL_NOT_EXISTED(1010, "Hotel not exists", HttpStatus.NOT_FOUND),
-    INCORRECT_ACCOUNT_OR_PASSWORD(1011, "Incorrect account or password", HttpStatus.NOT_FOUND),
+    USER_NOT_EXISTED(1010, "User not exists", HttpStatus.NOT_FOUND),
+    HOTEL_NOT_EXISTED(1011, "Hotel not exists", HttpStatus.NOT_FOUND),
+    ORDER_NOT_EXISTED(1012, "Order not exists", HttpStatus.NOT_FOUND),
     ;
 
     private int code;

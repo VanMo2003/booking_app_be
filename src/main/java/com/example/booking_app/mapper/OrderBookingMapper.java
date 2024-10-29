@@ -12,6 +12,7 @@ import com.example.booking_app.entity.OrderBooking;
 public interface OrderBookingMapper {
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "hotel", ignore = true)
+    @Mapping(target = "totalPrice", ignore = true)
     OrderBooking toOrderBooking(OrderBookingRequest request);
 
     @Mapping(target = "user", ignore = true)
