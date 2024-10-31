@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -48,6 +49,21 @@ public class UserService {
         ));
 
         return userResponse;
+    }
+    public UserResponse getMyInfo() {
+        var context = SecurityContextHolder.getContext();
+        String username = context.getAuthentication().getName();
+        User user =
+                userRepository.findByUsername(username).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        UserResponse userResponse = userMapper.toUserResponse(user);
+
+        return userResponse;
+    }
+
+    public boolean checkExistUser(String username){
+        boolean exists = userRepository.existsByUsername(username);
+        return exists;
     }
 
     public void deleteUserById(String id) {
