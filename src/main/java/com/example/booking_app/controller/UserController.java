@@ -42,6 +42,15 @@ public class UserController {
         response.setData(userService.getUserById(userId));
         return response;
     }
+    @GetMapping("/myInfo")
+    ApiResponse<UserResponse> getMyInfo() {
+        return ApiResponse.<UserResponse>builder().data(userService.getMyInfo()).build();
+    }
+
+    @GetMapping("/checkExistUser/{username}")
+    ApiResponse<Boolean> checkExistUser(@PathVariable String username) {
+        return ApiResponse.<Boolean>builder().data(userService.checkExistUser(username)).build();
+    }
 
     @DeleteMapping("{userId}")
     ApiResponse<String> deleteUserById(@PathVariable String userId) {
