@@ -1,8 +1,8 @@
 package com.example.booking_app.dto.response;
 
-import java.time.LocalDate;
 import java.util.Date;
-import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -12,16 +12,17 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserResponse {
-    String id;
-    String username;
-    String fullName;
-    String phone;
-    String gender;
-    LocalDate dateOfBirth;
-    String birthPlace;
+public class HotelResponse {
+    String pathImage;
+    String nameHotel;
     String address;
-    Set<RoleResponse> roles;
+    String description;
+    double price;
+    int numberOfRoom;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    UserResponse user;
+
     boolean active;
     Date onCreate;
     Date onUpdate;

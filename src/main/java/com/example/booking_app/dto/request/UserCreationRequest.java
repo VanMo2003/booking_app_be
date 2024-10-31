@@ -1,13 +1,15 @@
 package com.example.booking_app.dto.request;
 
-import com.example.booking_app.validator.DobConstraint;
-import jakarta.validation.constraints.Size;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
-
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+
+import jakarta.validation.constraints.Size;
+
+import com.example.booking_app.validator.DobConstraint;
+
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @NoArgsConstructor
@@ -30,6 +32,7 @@ public class UserCreationRequest {
 
     String birthPlace;
     String address;
+    List<String> roles = List.of("USER");
     boolean active = true;
     Date onCreate = new Date();
     Date onUpdate = new Date();
