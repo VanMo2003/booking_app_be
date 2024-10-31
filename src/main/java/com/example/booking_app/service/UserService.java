@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -57,6 +58,21 @@ public class UserService {
                 userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED)));
 
         return userResponse;
+    }
+    public UserResponse getMyInfo() {
+        var context = SecurityContextHolder.getContext();
+        String username = context.getAuthentication().getName();
+        User user =
+                userRepository.findByUsername(username).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        UserResponse userResponse = userMapper.toUserResponse(user);
+
+        return userResponse;
+    }
+
+    public boolean checkExistUser(String username){
+        boolean exists = userRepository.existsByUsername(username);
+        return exists;
     }
 
     public void deleteUserById(String id) {
