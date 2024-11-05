@@ -2,7 +2,6 @@ package com.example.booking_app.controller;
 
 import java.util.List;
 
-import com.example.booking_app.dto.request.UpdateStatusRequest;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.booking_app.dto.request.OrderBookingRequest;
@@ -45,6 +44,20 @@ public class OrderBookingController {
     ApiResponse<OrderBookingResponse> cancelOrder(@PathVariable Long id){
         return ApiResponse.<OrderBookingResponse>builder()
                 .data(orderBookingService.updateStatusOrder(id, false))
+                .build();
+    }
+
+    @GetMapping("/mySelf")
+    ApiResponse<List<OrderBookingResponse>> getOrderMySelf(){
+        return ApiResponse.<List<OrderBookingResponse>>builder()
+                .data(orderBookingService.getOrderMySelf())
+                .build();
+    }
+
+    @GetMapping("/hotel")
+    ApiResponse<List<OrderBookingResponse>> getOrderOfHotel(){
+        return ApiResponse.<List<OrderBookingResponse>>builder()
+                .data(orderBookingService.getOrderOfHotel())
                 .build();
     }
 }

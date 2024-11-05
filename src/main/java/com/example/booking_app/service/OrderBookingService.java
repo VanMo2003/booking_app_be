@@ -1,11 +1,12 @@
 package com.example.booking_app.service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
-import com.example.booking_app.constant.PredefinedRole;
 import com.example.booking_app.constant.StatusOrder;
-import com.example.booking_app.dto.request.UpdateStatusRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +42,7 @@ public class OrderBookingService {
     HotelMapper hotelMapper;
 
     public List<OrderBookingResponse> getAllOrder() {
-        return orderBookingRepository.findAll().stream()
+        List<OrderBookingResponse> orderBookingResponses = orderBookingRepository.findAll().stream()
                 .map(orderBooking -> {
                     OrderBookingResponse response = orderBookingMapper.toOrderBookingResponse(orderBooking);
                     response.setUser(userMapper.toUserResponse(orderBooking.getUser()));
@@ -50,6 +51,10 @@ public class OrderBookingService {
                     return response;
                 })
                 .toList();
+
+        orderBookingResponses.stream().sorted(Comparator.comparing(OrderBookingResponse::getOnCreate).reversed());
+
+        return orderBookingResponses;
     }
 
     public OrderBookingResponse createOrder(OrderBookingRequest request) {
@@ -104,5 +109,45 @@ public class OrderBookingService {
         orderBookingResponse.setHotel(hotelMapper.toHotelResponse(orderBooking.getHotel()));
 
         return orderBookingResponse;
+    }
+    public List<OrderBookingResponse> getOrderMySelf(){
+        var context = SecurityContextHolder.getContext();
+        String username = context.getAuthentication().getName();
+
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        List<OrderBookingResponse>  orderBookingResponses = new ArrayList<>();
+        orderBookingRepository.findByUserId(user.getId()).forEach (orderBooking -> {
+            OrderBookingResponse response = orderBookingMapper.toOrderBookingResponse(orderBooking);
+
+            response.setUser(userMapper.toUserResponse(user));
+            response.setHotel(hotelMapper.toHotelResponse(orderBooking.getHotel()));
+            orderBookingResponses.add(response) ;
+        });
+
+        orderBookingResponses.sort(Comparator.comparing(OrderBookingResponse::getOnCreate).reversed());
+
+        return orderBookingResponses;
+    }
+
+    public List<OrderBookingResponse> getOrderOfHotel(){
+        var context = SecurityContextHolder.getContext();
+        String username = context.getAuthentication().getName();
+
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        Hotel hotel = hotelRepository.findByUserId(user.getId()).orElseThrow(() ->  new AppException(ErrorCode.UN_AUTHENTICATED));
+        List<OrderBookingResponse> orderBookingResponses = new ArrayList<>();
+        orderBookingRepository.findByHotelId(hotel.getId()).forEach(orderBooking -> {
+            OrderBookingResponse response = orderBookingMapper.toOrderBookingResponse(orderBooking);
+
+            response.setUser(userMapper.toUserResponse(orderBooking.getUser()));
+            response.setHotel(hotelMapper.toHotelResponse(hotel));
+            orderBookingResponses.add(response) ;
+
+        });
+
+        orderBookingResponses.sort(Comparator.comparing(OrderBookingResponse::getOnCreate).reversed());
+
+        return orderBookingResponses;
     }
 }
