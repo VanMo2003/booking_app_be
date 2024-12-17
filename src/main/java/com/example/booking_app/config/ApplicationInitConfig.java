@@ -76,18 +76,13 @@ public class ApplicationInitConfig {
                 permissions.add(getAllRolePermission);
                 permissions.add(getAllPermission);
 
-                Role adminRole = roleRepository.save(Role.builder()
-                        .name(PredefinedRole.ADMIN_ROLE)
-                        .description("Admin role")
-                        .permissions(permissions)
-                        .build());
-                Set<Role> roles = new HashSet<>();
-                roles.add(adminRole);
+                Role role = new Role();
+                role.setName(PredefinedRole.ADMIN_ROLE);
                 User user = User.builder()
                         .username(ADMIN_USER_NAME)
                         .password(passwordEncoder.encode(ADMIN_PASSWORD))
                         .active(true)
-                        .roles(roles)
+                        .role(role)
                         .onCreate(new Date())
                         .onUpdate(new Date())
                         .build();

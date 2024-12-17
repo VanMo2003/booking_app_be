@@ -17,6 +17,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrderBookingResponse {
+    Long id;
     int numberOfRoom;
     LocalDate dateCheckIn;
     LocalDate dateCheckOut;

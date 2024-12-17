@@ -2,7 +2,6 @@ package com.example.booking_app.service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -15,7 +14,7 @@ import com.example.booking_app.dto.response.HotelResponse;
 import com.example.booking_app.dto.response.OrderBookingResponse;
 import com.example.booking_app.dto.response.UserResponse;
 import com.example.booking_app.entity.Hotel;
-import com.example.booking_app.entity.OrderBooking;
+import com.example.booking_app.entity.Booking;
 import com.example.booking_app.entity.User;
 import com.example.booking_app.exception.AppException;
 import com.example.booking_app.exception.ErrorCode;
@@ -52,8 +51,6 @@ public class OrderBookingService {
                 })
                 .toList();
 
-        orderBookingResponses.stream().sorted(Comparator.comparing(OrderBookingResponse::getOnCreate).reversed());
-
         return orderBookingResponses;
     }
 
@@ -70,14 +67,14 @@ public class OrderBookingService {
 
         HotelResponse hotelResponse = hotelMapper.toHotelResponse(hotel);
 
-        OrderBooking orderBooking = orderBookingMapper.toOrderBooking(request);
+        Booking booking = orderBookingMapper.toOrderBooking(request);
 
-        orderBooking.setTotalPrice(BigDecimal.valueOf(hotel.getPrice() * request.getNumberOfRoom()));
-        orderBooking.setUser(user);
-        orderBooking.setHotel(hotel);
+//        booking.setTotalPrice(BigDecimal.valueOf(hotel.getPrice() * request.getNumberOfRoom()));
+        booking.setUser(user);
+        booking.setHotel(hotel);
 
         OrderBookingResponse response =
-                orderBookingMapper.toOrderBookingResponse(orderBookingRepository.save(orderBooking));
+                orderBookingMapper.toOrderBookingResponse(orderBookingRepository.save(booking));
         response.setUser(userResponse);
         response.setHotel(hotelResponse);
 
@@ -88,25 +85,25 @@ public class OrderBookingService {
         var context = SecurityContextHolder.getContext();
         String username = context.getAuthentication().getName();
 
-        OrderBooking orderBooking = orderBookingRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_EXISTED));
+        Booking booking = orderBookingRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_EXISTED));
 
         User user = userRepository.findByUsername(username).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
-        if (user.getId().equals(orderBooking.getUser().getId())){
+        if (user.getId().equals(booking.getUser().getId())){
             if (isConfirm) throw new AppException(ErrorCode.UN_AUTHENTICATED);
-            else orderBooking.setStatusOrder(StatusOrder.CANCELED);
+            else booking.setStatusOrder(StatusOrder.CANCELED);
         }
 
         Hotel hotel = hotelRepository.findByUserId(user.getId()).orElseThrow(() ->  new AppException(ErrorCode.UN_AUTHENTICATED));
 
-        if (hotel.getId().equals(orderBooking.getHotel().getId())){
-            if (isConfirm) orderBooking.setStatusOrder(StatusOrder.CONFIRMED);
-            else orderBooking.setStatusOrder(StatusOrder.CANCELED);
+        if (hotel.getId().equals(booking.getHotel().getId())){
+            if (isConfirm) booking.setStatusOrder(StatusOrder.CONFIRMED);
+            else booking.setStatusOrder(StatusOrder.CANCELED);
         }
 
-        OrderBookingResponse orderBookingResponse = orderBookingMapper.toOrderBookingResponse(orderBookingRepository.save(orderBooking));
-        orderBookingResponse.setUser(userMapper.toUserResponse(orderBooking.getUser()));
-        orderBookingResponse.setHotel(hotelMapper.toHotelResponse(orderBooking.getHotel()));
+        OrderBookingResponse orderBookingResponse = orderBookingMapper.toOrderBookingResponse(orderBookingRepository.save(booking));
+        orderBookingResponse.setUser(userMapper.toUserResponse(booking.getUser()));
+        orderBookingResponse.setHotel(hotelMapper.toHotelResponse(booking.getHotel()));
 
         return orderBookingResponse;
     }

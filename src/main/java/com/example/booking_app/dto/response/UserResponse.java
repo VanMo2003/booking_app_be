@@ -21,7 +21,7 @@ public class UserResponse {
     LocalDate dateOfBirth;
     String birthPlace;
     String address;
-    Set<RoleResponse> roles;
+    RoleResponse role;
     boolean active;
     Date onCreate;
     Date onUpdate;

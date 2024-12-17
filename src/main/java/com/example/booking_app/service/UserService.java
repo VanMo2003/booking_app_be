@@ -1,8 +1,12 @@
 package com.example.booking_app.service;
 
-import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
+import com.example.booking_app.dto.request.UserUpdateRequest;
+import com.example.booking_app.entity.Role;
+import com.example.booking_app.mapper.RoleMapper;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,6 +33,7 @@ public class UserService {
     RoleRepository roleRepository;
     PasswordEncoder passwordEncoder;
     UserMapper userMapper;
+    RoleMapper roleMapper;
 
     @PreAuthorize("hasRole('ADMIN')")
     public List<UserResponse> getAllUsers() {
@@ -46,10 +51,13 @@ public class UserService {
         User user = userMapper.toUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
-        var roles = roleRepository.findAllById(request.getRoles());
-        user.setRoles(new HashSet<>(roles));
+        Role role = roleRepository.findById(request.getRole()).orElseThrow();
+        user.setRole(role);
 
-        return userMapper.toUserResponse(userRepository.save(user));
+        UserResponse userResponse = userMapper.toUserResponse(userRepository.save(user));
+        userResponse.setRole(roleMapper.toRoleResponse(role));
+
+        return userResponse;
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -66,6 +74,24 @@ public class UserService {
                 userRepository.findByUsername(username).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         UserResponse userResponse = userMapper.toUserResponse(user);
+        userResponse.setRole(roleMapper.toRoleResponse(user.getRole()));
+
+        return userResponse;
+    }
+
+    public UserResponse updateMyInfo(UserUpdateRequest request) {
+        var context = SecurityContextHolder.getContext();
+        String username = context.getAuthentication().getName();
+        User user =
+                userRepository.findByUsername(username).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        userMapper.updateUser(user, request);
+        if (!Objects.isNull(request.getPassword())) user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+
+
+        UserResponse userResponse = userMapper.toUserResponse(userRepository.save(user));
+        userResponse.setRole(roleMapper.toRoleResponse(user.getRole()));
 
         return userResponse;
     }

@@ -13,25 +13,14 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class HotelReview {
+public class Statistical {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
+    LocalDate revenueMonth;
+    double totalRevenue;
+
     @ManyToOne
-    @JoinColumn(name = "hotel_id", nullable = false)
     Hotel hotel;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    User user;
-
-    @Column(nullable = false)
-    double rating;
-
-    @Column(length = 5000)
-    String reviewText;
-
-    @Column(nullable = false)
-    LocalDate reviewDate;
 }

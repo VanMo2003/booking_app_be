@@ -32,7 +32,7 @@ public class UserCreationRequest {
 
     String birthPlace;
     String address;
-    List<String> roles = List.of("USER");
+    String role = "USER";
     boolean active = true;
     Date onCreate = new Date();
     Date onUpdate = new Date();
