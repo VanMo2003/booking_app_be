@@ -19,15 +19,13 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class OrderBooking {
+public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
     int numberOfRoom;
-    LocalDate dateCheckIn;
-    LocalDate dateCheckOut;
-    BigDecimal totalPrice;
+    LocalDate bookingDate;
 
     @Enumerated(EnumType.STRING)
     StatusOrder statusOrder;
@@ -43,6 +41,9 @@ public class OrderBooking {
     @ManyToOne
     @JoinColumn(name = "hotel_id", nullable = false)
     Hotel hotel;
+
+    @OneToOne
+    BookedRoom bookedRoom;
 
     Date onCreate;
     Date onUpdate;

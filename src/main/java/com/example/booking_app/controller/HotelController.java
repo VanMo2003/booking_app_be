@@ -34,7 +34,12 @@ public class HotelController {
                 .data(hotelService.createHotel(request))
                 .build();
     }
-
+    @GetMapping("/{id}")
+    ApiResponse<HotelResponse> getAllHotel(@PathVariable Long id) {
+        return ApiResponse.<HotelResponse>builder()
+                .data(hotelService.getHotelById(id))
+                .build();
+    }
     @PutMapping("/{id}")
     ApiResponse<HotelResponse> updateHotel(@PathVariable Long id, @RequestBody HotelRequest request) {
         return ApiResponse.<HotelResponse>builder()

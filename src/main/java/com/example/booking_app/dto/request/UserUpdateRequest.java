@@ -25,7 +25,6 @@ public class UserUpdateRequest {
 
     String birthPlace;
     String address;
-    List<String> roles;
     boolean active = true;
     Date onUpdate = new Date();
 }

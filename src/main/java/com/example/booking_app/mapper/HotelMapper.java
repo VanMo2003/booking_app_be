@@ -13,6 +13,8 @@ public interface HotelMapper {
     @Mapping(target = "user", ignore = true)
     Hotel toHotel(HotelRequest request);
 
+    @Mapping(target = "rooms", ignore = true)
+    @Mapping(target = "services", ignore = true)
     HotelResponse toHotelResponse(Hotel hotel);
 
     @Mapping(target = "user", ignore = true)

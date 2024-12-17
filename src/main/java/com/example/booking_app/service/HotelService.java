@@ -3,9 +3,13 @@ package com.example.booking_app.service;
 import java.util.List;
 import java.util.Objects;
 
+import com.example.booking_app.dto.response.RoomResponse;
+import com.example.booking_app.dto.response.ServiceResponse;
+import com.example.booking_app.entity.Service;
+import com.example.booking_app.repository.RoomRepository;
+import com.example.booking_app.repository.ServiceRepository;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Service;
 
 import com.example.booking_app.dto.request.HotelRequest;
 import com.example.booking_app.dto.response.HotelResponse;
@@ -23,16 +27,20 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-@Service
+@org.springframework.stereotype.Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class HotelService {
     HotelRepository hotelRepository;
     UserRepository userRepository;
+    ServiceService serviceService;
+    RoomService roomService;
     HotelMapper hotelMapper;
     UserMapper userMapper;
 
     public List<HotelResponse> getAllHotel() {
+
+
         return hotelRepository.findAll().stream()
                 .map(hotel -> hotelMapper.toHotelResponse(hotel))
                 .toList();
@@ -53,6 +61,19 @@ public class HotelService {
         hotelResponse.setUser(userMapper.toUserResponse(user));
 
         return hotelResponse;
+    }
+
+    public HotelResponse getHotelById(Long id){
+        Hotel hotel = hotelRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.HOTEL_NOT_EXISTED));
+
+        List<ServiceResponse> serviceResponses = serviceService.getAllByHotel(id);
+        List<RoomResponse> roomResponses = roomService.getAllByHotel(id);
+
+        HotelResponse hotelResponse = hotelMapper.toHotelResponse(hotel);
+        hotelResponse.setServices(serviceResponses);
+        hotelResponse.setRooms(roomResponses);
+
+        return  hotelResponse;
     }
 
     public HotelResponse updateHotel(Long id, HotelRequest request) {

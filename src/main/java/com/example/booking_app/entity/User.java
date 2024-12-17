@@ -31,11 +31,8 @@ public class User {
     String birthPlace;
     String address;
 
-    @ManyToMany
-    Set<Role> roles;
-
-    @OneToMany(mappedBy = "user")
-    private List<OrderBooking> orderBookings;
+    @ManyToOne
+    Role role;
 
     boolean active;
     Date onCreate;

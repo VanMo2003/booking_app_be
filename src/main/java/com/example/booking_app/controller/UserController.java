@@ -2,6 +2,7 @@ package com.example.booking_app.controller;
 
 import java.util.List;
 
+import com.example.booking_app.dto.request.UserUpdateRequest;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.*;
@@ -45,6 +46,11 @@ public class UserController {
     @GetMapping("/myInfo")
     ApiResponse<UserResponse> getMyInfo() {
         return ApiResponse.<UserResponse>builder().data(userService.getMyInfo()).build();
+    }
+
+    @PutMapping("/updateMyInfo")
+    ApiResponse<UserResponse> updateMyInfo(@RequestBody UserUpdateRequest request) {
+        return ApiResponse.<UserResponse>builder().data(userService.updateMyInfo(request)).build();
     }
 
     @GetMapping("/checkExistUser/{username}")

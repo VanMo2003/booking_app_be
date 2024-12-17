@@ -1,6 +1,7 @@
 package com.example.booking_app.dto.response;
 
 import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -13,6 +14,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class HotelResponse {
+    Long id;
     String pathImage;
     String nameHotel;
     String address;
@@ -22,6 +24,10 @@ public class HotelResponse {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     UserResponse user;
+
+    List<RoomResponse> rooms;
+
+    List<ServiceResponse> services;
 
     boolean active;
     Date onCreate;

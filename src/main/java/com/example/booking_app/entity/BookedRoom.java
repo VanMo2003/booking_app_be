@@ -5,6 +5,8 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
@@ -13,25 +15,16 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class HotelReview {
+public class BookedRoom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "hotel_id", nullable = false)
-    Hotel hotel;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    User user;
-
-    @Column(nullable = false)
-    double rating;
-
-    @Column(length = 5000)
-    String reviewText;
-
-    @Column(nullable = false)
-    LocalDate reviewDate;
+    LocalDate checkIn;
+    LocalDate checkOut;
+    @OneToMany
+    List<Room> rooms;
+    double price;
+    boolean isCheckedIn = false;
+    boolean isCheckedOut = false;
+    String note;
 }

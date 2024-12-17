@@ -28,15 +28,10 @@ public class Hotel {
     String nameHotel;
     String address;
     String description;
-    double price;
-    int numberOfRoom;
 
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false)
     User user;
-
-    @OneToMany(mappedBy = "hotel")
-    private List<OrderBooking> orderBookings;
 
     boolean active;
     Date onCreate;

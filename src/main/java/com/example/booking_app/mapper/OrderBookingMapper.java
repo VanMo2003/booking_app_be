@@ -6,19 +6,18 @@ import org.mapstruct.MappingTarget;
 
 import com.example.booking_app.dto.request.OrderBookingRequest;
 import com.example.booking_app.dto.response.OrderBookingResponse;
-import com.example.booking_app.entity.OrderBooking;
+import com.example.booking_app.entity.Booking;
 
 @Mapper(componentModel = "spring")
 public interface OrderBookingMapper {
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "hotel", ignore = true)
-    @Mapping(target = "totalPrice", ignore = true)
-    OrderBooking toOrderBooking(OrderBookingRequest request);
+    Booking toOrderBooking(OrderBookingRequest request);
 
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "hotel", ignore = true)
-    OrderBookingResponse toOrderBookingResponse(OrderBooking orderBooking);
+    OrderBookingResponse toOrderBookingResponse(Booking booking);
 
     @Mapping(target = "user", ignore = true)
-    void updateOrderBooking(@MappingTarget OrderBooking footballPitches, OrderBookingRequest request);
+    void updateOrderBooking(@MappingTarget Booking footballPitches, OrderBookingRequest request);
 }
