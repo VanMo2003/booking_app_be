@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface OrderBookingRepository extends JpaRepository<Booking, Long> {
     List<Booking> findByUserId(String userId);
-    ArrayList<Booking> findByHotelId(Long hotelId);
+//    ArrayList<Booking> findByHotelId(Long hotelId);
 
 }

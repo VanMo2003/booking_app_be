@@ -1,6 +1,9 @@
-package com.example.booking_app.entity;
+package com.example.booking_app.dto.response;
 
-import jakarta.persistence.*;
+import com.example.booking_app.entity.Hotel;
+import com.example.booking_app.entity.Room;
+import com.example.booking_app.entity.Service;
+import jakarta.persistence.OneToMany;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -8,32 +11,22 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
-@Entity
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class BookedRoom {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class BookedRoomResponse {
     Long id;
     LocalDate arrivalDate;
     LocalDate departureDate;
-    @ManyToMany
     List<Room> rooms;
-
-    @ManyToMany
     List<Service> services;
     double price;
     boolean isCheckedIn = false;
     boolean isCheckedOut = false;
     String note;
-
-    @ManyToOne
     Hotel hotel;
-
     Date onCreate;
     Date onUpdate;
 }

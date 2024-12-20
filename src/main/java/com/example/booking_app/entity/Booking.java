@@ -24,7 +24,6 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    int numberOfRoom;
     LocalDate bookingDate;
 
     @Enumerated(EnumType.STRING)
@@ -37,10 +36,6 @@ public class Booking {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     User user;
-
-    @ManyToOne
-    @JoinColumn(name = "hotel_id", nullable = false)
-    Hotel hotel;
 
     @OneToOne
     BookedRoom bookedRoom;
