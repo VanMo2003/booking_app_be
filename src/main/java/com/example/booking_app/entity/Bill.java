@@ -1,10 +1,12 @@
 package com.example.booking_app.entity;
 
+import com.example.booking_app.constant.PaymentMethod;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @Getter
@@ -18,16 +20,12 @@ public class Bill {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @ManyToOne
-    User user;
-
     @OneToOne
     Booking booking;
 
-    int numberOfRoom;
-    LocalDate checkIn;
-    LocalDate checkOut;
-
+    PaymentMethod paymentMethod;
     LocalDate paymentDate;
-    double totalPayment;
+
+    Date onCreate;
+    Date onUpdate;
 }

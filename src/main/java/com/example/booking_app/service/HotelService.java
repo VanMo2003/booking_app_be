@@ -120,7 +120,7 @@ public class HotelService {
                 .toList();
     }
 
-    @PreAuthorize("hasRole('ADMIN')") // chặn trước khi gọi hàm để kiểm tra role
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteHotel(Long id) {
         hotelRepository.deleteById(id);
     }

@@ -47,7 +47,7 @@ public class ApplicationInitConfig {
     @Bean
     ApplicationRunner applicationRunner(UserRepository userRepository) {
         return args -> {
-            if (userRepository.findByUsername(ADMIN_USER_NAME).isEmpty()) {
+            if (!userRepository.findByUsername(ADMIN_USER_NAME).isPresent()) {
                 Permission getAllUserPermission = permissionRepository.save(Permission.builder()
                         .name(PredefinedPermission.GET_ALL_USER)
                         .description("Get all user")
@@ -71,6 +71,11 @@ public class ApplicationInitConfig {
                         .description("hotelier role")
                         .build());
 
+                roleRepository.save(Role.builder()
+                        .name(PredefinedRole.ADMIN_ROLE)
+                        .description("admin role")
+                        .build());
+
                 Set<Permission> permissions = new HashSet<>();
                 permissions.add(getAllUserPermission);
                 permissions.add(getAllRolePermission);
@@ -81,10 +86,7 @@ public class ApplicationInitConfig {
                 User user = User.builder()
                         .username(ADMIN_USER_NAME)
                         .password(passwordEncoder.encode(ADMIN_PASSWORD))
-                        .active(true)
                         .role(role)
-                        .onCreate(new Date())
-                        .onUpdate(new Date())
                         .build();
 
                 userRepository.save(user);

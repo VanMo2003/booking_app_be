@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 
 import com.example.booking_app.dto.request.UserUpdateRequest;
+import com.example.booking_app.dto.response.RoleResponse;
 import com.example.booking_app.entity.Role;
 import com.example.booking_app.mapper.RoleMapper;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -41,11 +42,12 @@ public class UserService {
     UserMapper userMapper;
     RoleMapper roleMapper;
 
-    @PreAuthorize("hasRole('ADMIN')")
     public List<UserResponse> getAllUsers() {
         return userRepository.findAll().stream()
                 .map(user -> {
                     UserResponse userResponse = userMapper.toUserResponse(user);
+                    RoleResponse roleResponse = roleMapper.toRoleResponse(user.getRole());
+                    userResponse.setRole(roleResponse);
                     return userResponse;
                 })
                 .toList();
@@ -66,7 +68,6 @@ public class UserService {
         return userResponse;
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public UserResponse getUserById(String id) {
         UserResponse userResponse = userMapper.toUserResponse(
                 userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED)));

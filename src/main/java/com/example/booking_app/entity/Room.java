@@ -19,7 +19,6 @@ public class Room {
     double price;
     String description;
 
-
     @ManyToOne
     Hotel hotel;
 }

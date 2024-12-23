@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 @RestController
-@RequestMapping("/hotels")
+@RequestMapping("/hotel")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class HotelController {

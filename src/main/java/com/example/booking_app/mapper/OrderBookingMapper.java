@@ -11,11 +11,9 @@ import com.example.booking_app.entity.Booking;
 @Mapper(componentModel = "spring")
 public interface OrderBookingMapper {
     @Mapping(target = "user", ignore = true)
-    @Mapping(target = "hotel", ignore = true)
     Booking toOrderBooking(OrderBookingRequest request);
 
     @Mapping(target = "user", ignore = true)
-    @Mapping(target = "hotel", ignore = true)
     OrderBookingResponse toOrderBookingResponse(Booking booking);
 
     @Mapping(target = "user", ignore = true)
