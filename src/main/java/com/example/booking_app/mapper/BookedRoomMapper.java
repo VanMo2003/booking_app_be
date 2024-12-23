@@ -18,13 +18,11 @@ public interface BookedRoomMapper {
     @Mapping(target = "services", ignore = true)
     BookedRoom toBookedRoom(BookedRoomRequest request);
 
+    BookedRoomRequest toBookedRoomRequest(BookRequest request);
+
+    BookedRoomResponse toBookedRoomResponse(BookedRoom bookedRoom);
     @Mapping(target = "hotel", ignore = true)
     @Mapping(target = "rooms", ignore = true)
     @Mapping(target = "services", ignore = true)
-    BookedRoom toBookedRoomFromBookRequest(BookRequest request);
-
-    BookedRoomResponse toBookedRoomResponse(BookedRoom bookedRoom);
-    @Mapping(target = "rooms", ignore = true)
-    @Mapping(target = "hotel", ignore = true)
     void updateBookedRoom(@MappingTarget BookedRoom bookedRoom, BookedRoomRequest request);
 }
