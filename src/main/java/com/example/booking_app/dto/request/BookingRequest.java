@@ -22,9 +22,8 @@ public class BookingRequest {
     StatusOrder statusOrder = StatusOrder.PENDING;
     PaymentMethod paymentMethod;
 
-    String userId;
-
     Long bookedRoomId;
+    double price = 0.0;
 
     Date onCreate = new Date();
     Date onUpdate = new Date();

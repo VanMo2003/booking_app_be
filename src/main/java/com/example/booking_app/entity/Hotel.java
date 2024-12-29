@@ -28,6 +28,7 @@ public class Hotel {
     String nameHotel;
     String address;
     String description;
+    double rating;
 
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false)

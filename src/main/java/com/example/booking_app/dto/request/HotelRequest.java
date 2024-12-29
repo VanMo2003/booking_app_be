@@ -15,10 +15,8 @@ public class HotelRequest {
     String nameHotel;
     String address;
     String description;
-    double price;
-    int numberOfRoom;
     String userID;
-
+    double rating;
     boolean active = true;
     Date onCreate = new Date();
     Date onUpdate = new Date();

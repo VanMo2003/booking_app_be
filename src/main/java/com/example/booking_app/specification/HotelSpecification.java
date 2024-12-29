@@ -9,7 +9,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import com.example.booking_app.entity.Hotel;
 
-public class UserSpecification {
+public class HotelSpecification {
     public static Specification<Hotel> hasSimilarName(String name) {
         return (root, query, criteriaBuilder) ->
                 criteriaBuilder.like(criteriaBuilder.lower(root.get("nameHotel")), "%" + name.toLowerCase() + "%");
@@ -25,7 +25,7 @@ public class UserSpecification {
             List<Predicate> predicates = new ArrayList<>();
             if (name != null) {
                 predicates.add(
-                        criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + name.toLowerCase() + "%"));
+                        criteriaBuilder.like(criteriaBuilder.lower(root.get("nameHotel")), "%" + name.toLowerCase() + "%"));
             }
             if (address != null) {
                 predicates.add(criteriaBuilder.like(

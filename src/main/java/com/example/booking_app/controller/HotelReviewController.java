@@ -19,10 +19,10 @@ public class HotelReviewController {
 
     private HotelReviewService hotelReviewService;
 
-    @GetMapping
-    public ApiResponse<List<HotelReviewResponse>> getAllReviews() {
+    @GetMapping("/{hotelId}")
+    public ApiResponse<List<HotelReviewResponse>> getAllReviews(@PathVariable Long hotelId) {
         return ApiResponse.<List<HotelReviewResponse>>builder()
-                .data(hotelReviewService.getAllReviews())
+                .data(hotelReviewService.getAllReviews(hotelId))
                 .build();
     }
 

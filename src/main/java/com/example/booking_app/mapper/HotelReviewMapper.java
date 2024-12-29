@@ -16,6 +16,8 @@ public interface HotelReviewMapper {
     @Mapping(target = "hotel", ignore = true)
     HotelReview toHotelReview(HotelReviewRequest request);
 
+    @Mapping(target = "user", ignore = true)
+    @Mapping(target = "hotel", ignore = true)
     HotelReviewResponse toHotelReviewResponse(HotelReview hotelReview);
 
     @Mapping(target = "user", ignore = true)

@@ -20,6 +20,8 @@ public interface BookedRoomMapper {
 
     BookedRoomRequest toBookedRoomRequest(BookRequest request);
 
+    @Mapping(target = "rooms", ignore = true)
+    @Mapping(target = "services", ignore = true)
     BookedRoomResponse toBookedRoomResponse(BookedRoom bookedRoom);
     @Mapping(target = "hotel", ignore = true)
     @Mapping(target = "rooms", ignore = true)

@@ -39,6 +39,7 @@ public class Booking {
 
     @OneToOne
     BookedRoom bookedRoom;
+    double price;
 
     Date onCreate;
     Date onUpdate;

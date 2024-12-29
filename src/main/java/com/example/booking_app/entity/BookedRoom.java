@@ -26,7 +26,6 @@ public class BookedRoom {
 
     @ManyToMany
     List<Service> services;
-    double price;
     boolean isCheckedIn = false;
     boolean isCheckedOut = false;
     String note;

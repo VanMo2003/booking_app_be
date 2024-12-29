@@ -14,7 +14,7 @@ public interface ServiceMapper {
 
     @Mapping(target = "hotel", ignore = true)
     Service toService(ServiceRequest request);
-
+    @Mapping(target = "hotel", ignore = true)
     ServiceResponse toServiceResponse(Service service);
 
     @Mapping(target = "hotel", ignore = true)

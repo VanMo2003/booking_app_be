@@ -8,6 +8,7 @@ import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -21,12 +22,10 @@ public class BookRequest {
     StatusOrder statusOrder = StatusOrder.PENDING;
     PaymentMethod paymentMethod;
 
-    String userId;
-
     LocalDate arrivalDate;
     LocalDate departureDate;
     Set<Long> rooms;
-    Set<Long> services;
+    Set<Long> services = new HashSet<>();
     String note;
     Long hotelId;
     double price = 0.0;

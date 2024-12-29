@@ -5,9 +5,6 @@ import java.util.Objects;
 
 import com.example.booking_app.dto.response.RoomResponse;
 import com.example.booking_app.dto.response.ServiceResponse;
-import com.example.booking_app.entity.Service;
-import com.example.booking_app.repository.RoomRepository;
-import com.example.booking_app.repository.ServiceRepository;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -21,7 +18,7 @@ import com.example.booking_app.mapper.HotelMapper;
 import com.example.booking_app.mapper.UserMapper;
 import com.example.booking_app.repository.HotelRepository;
 import com.example.booking_app.repository.UserRepository;
-import com.example.booking_app.specification.UserSpecification;
+import com.example.booking_app.specification.HotelSpecification;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -39,8 +36,6 @@ public class HotelService {
     UserMapper userMapper;
 
     public List<HotelResponse> getAllHotel() {
-
-
         return hotelRepository.findAll().stream()
                 .map(hotel -> hotelMapper.toHotelResponse(hotel))
                 .toList();
@@ -96,7 +91,7 @@ public class HotelService {
     }
 
     public List<HotelResponse> searchHotelByName(String name) {
-        Specification<Hotel> spec = UserSpecification.hasSimilarName(name);
+        Specification<Hotel> spec = HotelSpecification.hasSimilarName(name);
         List<Hotel> hotels = hotelRepository.findAll(spec);
         List<HotelResponse> hotelResponses =
                 hotels.stream().map(hotel -> hotelMapper.toHotelResponse(hotel)).toList();
@@ -105,7 +100,7 @@ public class HotelService {
     }
 
     public List<HotelResponse> searchHotelByAddress(String address) {
-        Specification<Hotel> spec = UserSpecification.hasSimilarAddress(address);
+        Specification<Hotel> spec = HotelSpecification.hasSimilarAddress(address);
         List<Hotel> hotels = hotelRepository.findAll(spec);
         List<HotelResponse> hotelResponses =
                 hotels.stream().map(hotel -> hotelMapper.toHotelResponse(hotel)).toList();
@@ -114,7 +109,8 @@ public class HotelService {
     }
 
     public List<HotelResponse> searchUsersByNameAndAddress(String name, String address) {
-        Specification<Hotel> spec = UserSpecification.hasSimilarNameAndAddress(name, address);
+        Specification<Hotel> spec = HotelSpecification.hasSimilarNameAndAddress(name, address);
+
         return hotelRepository.findAll(spec).stream()
                 .map(hotel -> hotelMapper.toHotelResponse(hotel))
                 .toList();

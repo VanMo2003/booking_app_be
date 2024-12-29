@@ -6,6 +6,7 @@ import com.example.booking_app.dto.request.BookedRoomRequest;
 import com.example.booking_app.dto.request.HotelRequest;
 import com.example.booking_app.dto.response.ApiResponse;
 import com.example.booking_app.dto.response.BookedRoomResponse;
+import com.example.booking_app.dto.response.BookingResponse;
 import com.example.booking_app.dto.response.HotelResponse;
 import com.example.booking_app.service.BookedRoomService;
 import com.example.booking_app.service.HotelService;
@@ -22,10 +23,9 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class BookedRoomController {
     BookedRoomService bookedRoomService;
-
     @PostMapping
-    ApiResponse<BookedRoomResponse> createHotel(@RequestBody BookRequest request) {
-        return ApiResponse.<BookedRoomResponse>builder()
+    ApiResponse<BookingResponse> createHotel(@RequestBody BookRequest request) {
+        return ApiResponse.<BookingResponse>builder()
                 .data(bookedRoomService.createBookedRoom(request))
                 .build();
     }

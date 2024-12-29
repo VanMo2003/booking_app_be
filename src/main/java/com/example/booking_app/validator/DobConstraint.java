@@ -9,8 +9,8 @@ import java.lang.annotation.Target;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
-@Target({FIELD}) // where can use?
-@Retention(RUNTIME) // được xử lý lúc nào
+@Target({FIELD})
+@Retention(RUNTIME)
 @Constraint(validatedBy = {DobValidator.class})
 public @interface DobConstraint {
     String message() default "Your age must be greater than 16";
