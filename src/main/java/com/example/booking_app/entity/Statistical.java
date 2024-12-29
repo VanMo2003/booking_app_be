@@ -5,6 +5,8 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
+import java.util.Date;
 
 @Entity
 @Getter
@@ -23,4 +25,6 @@ public class Statistical {
 
     @ManyToOne
     Hotel hotel;
+
+    Date onCreate;
 }

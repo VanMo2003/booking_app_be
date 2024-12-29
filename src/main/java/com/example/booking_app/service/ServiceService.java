@@ -7,12 +7,14 @@ import com.example.booking_app.entity.Hotel;
 import com.example.booking_app.entity.Service;
 import com.example.booking_app.exception.AppException;
 import com.example.booking_app.exception.ErrorCode;
+import com.example.booking_app.mapper.HotelMapper;
 import com.example.booking_app.mapper.ServiceMapper;
 import com.example.booking_app.repository.HotelRepository;
 import com.example.booking_app.repository.ServiceRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 
@@ -24,6 +26,7 @@ public class ServiceService {
     ServiceRepository serviceRepository;
     HotelRepository hotelRepository;
     ServiceMapper serviceMapper;
+    HotelMapper hotelMapper;
 
     public List<ServiceResponse> getAllByHotel(Long id){
         Hotel hotel = hotelRepository.findById(id).orElseThrow(() -> {
@@ -34,7 +37,7 @@ public class ServiceService {
 
         return serviceResponses;
     }
-
+    @PreAuthorize("hasRole('HOTELIER')")
     public ServiceResponse createService(ServiceRequest request){
         Hotel hotel = hotelRepository.findById(request.getHotelId()).orElseThrow(() -> {
             throw new AppException(ErrorCode.HOTEL_NOT_EXISTED);
@@ -46,10 +49,11 @@ public class ServiceService {
         serviceRepository.save(service);
 
         ServiceResponse serviceResponse = serviceMapper.toServiceResponse(service);
+        serviceResponse.setHotel(hotelMapper.toHotelResponse(hotel));
 
         return serviceResponse;
     }
-
+    @PreAuthorize("hasRole('HOTELIER')")
     public ServiceResponse updateService(Long id, ServiceRequest request){
 
         Service service = serviceRepository.findById(id).orElseThrow();

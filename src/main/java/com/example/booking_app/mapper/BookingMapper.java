@@ -20,6 +20,7 @@ public interface BookingMapper {
 
     BookingRequest toBookingRequest(BookRequest request);
 
+    @Mapping(target = "bookedRoom", ignore = true)
     BookingResponse toBookingResponse(Booking booking);
 
     @Mapping(target = "user", ignore = true)

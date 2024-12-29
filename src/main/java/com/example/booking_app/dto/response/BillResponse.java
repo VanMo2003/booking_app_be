@@ -1,32 +1,29 @@
 package com.example.booking_app.dto.response;
 
-import java.util.Date;
-import java.util.List;
-
+import com.example.booking_app.constant.PaymentMethod;
+import com.example.booking_app.entity.Booking;
 import com.fasterxml.jackson.annotation.JsonInclude;
-
+import jakarta.persistence.OneToOne;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.time.LocalDate;
+import java.util.Date;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class HotelResponse {
+public class BillResponse {
     Long id;
-    String pathImage;
-    String nameHotel;
-    String address;
-    String description;
-    double rating;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    UserResponse user;
-    List<RoomResponse> rooms;
 
-    List<ServiceResponse> services;
+    BookingResponse booking;
 
-    boolean active;
+    PaymentMethod paymentMethod;
+    LocalDate paymentDate;
+
     Date onCreate;
     Date onUpdate;
 }

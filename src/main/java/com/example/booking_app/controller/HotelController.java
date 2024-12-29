@@ -35,7 +35,7 @@ public class HotelController {
                 .build();
     }
     @GetMapping("/{id}")
-    ApiResponse<HotelResponse> getAllHotel(@PathVariable Long id) {
+    ApiResponse<HotelResponse> getHotelById(@PathVariable Long id) {
         return ApiResponse.<HotelResponse>builder()
                 .data(hotelService.getHotelById(id))
                 .build();

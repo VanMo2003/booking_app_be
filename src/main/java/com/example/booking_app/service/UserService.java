@@ -36,6 +36,7 @@ public class UserService {
     UserMapper userMapper;
     RoleMapper roleMapper;
 
+    @PreAuthorize("hasRole('ADMIN')")
     public List<UserResponse> getAllUsers() {
         return userRepository.findAll().stream()
                 .map(user -> {
@@ -61,10 +62,11 @@ public class UserService {
 
         return userResponse;
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     public UserResponse getUserById(String id) {
-        UserResponse userResponse = userMapper.toUserResponse(
-                userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED)));
+        User user = userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        UserResponse userResponse = userMapper.toUserResponse(user);
+        userResponse.setRole(roleMapper.toRoleResponse(user.getRole()));
 
         return userResponse;
     }
@@ -101,7 +103,7 @@ public class UserService {
         boolean exists = userRepository.existsByUsername(username);
         return exists;
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteUserById(String id) {
         userRepository.deleteById(id);
     }

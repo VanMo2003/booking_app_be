@@ -17,6 +17,7 @@ public interface RoomMapper {
     @Mapping(target = "hotel", ignore = true)
     Room toRoom(RoomRequest request);
 
+    @Mapping(target = "hotel", ignore = true)
     RoomResponse toRoomResponse(Room user);
     @Mapping(target = "hotel", ignore = true)
     void updateRoom(@MappingTarget Room user, RoomRequest request);

@@ -10,6 +10,7 @@ import com.example.booking_app.entity.Room;
 import com.example.booking_app.entity.Service;
 import com.example.booking_app.exception.AppException;
 import com.example.booking_app.exception.ErrorCode;
+import com.example.booking_app.mapper.HotelMapper;
 import com.example.booking_app.mapper.RoomMapper;
 import com.example.booking_app.mapper.ServiceMapper;
 import com.example.booking_app.repository.HotelRepository;
@@ -18,6 +19,7 @@ import com.example.booking_app.repository.ServiceRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 
@@ -28,6 +30,7 @@ public class RoomService {
     RoomRepository roomRepository;
     HotelRepository hotelRepository;
     RoomMapper roomMapper;
+    HotelMapper hotelMapper;
 
     public List<RoomResponse> getAllByHotel(Long id){
         Hotel hotel = hotelRepository.findById(id).orElseThrow(() -> {
@@ -38,6 +41,7 @@ public class RoomService {
 
         return roomServices;
     }
+    @PreAuthorize("hasRole('HOTELIER')")
     public RoomResponse createRoom(RoomRequest request){
         Hotel hotel = hotelRepository.findById(request.getHotelId()).orElseThrow(() -> {
             throw new AppException(ErrorCode.HOTEL_NOT_EXISTED);
@@ -49,11 +53,11 @@ public class RoomService {
         roomRepository.save(room);
 
         RoomResponse roomResponse = roomMapper.toRoomResponse(room);
-        roomResponse.setHotel(hotel);
+        roomResponse.setHotel(hotelMapper.toHotelResponse(hotel));
 
         return roomResponse;
     }
-
+    @PreAuthorize("hasRole('HOTELIER')")
     public RoomResponse updateRoom(Long id, RoomRequest request){
 
         Room room = roomRepository.findById(id).orElseThrow();

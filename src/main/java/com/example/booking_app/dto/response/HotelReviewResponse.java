@@ -7,7 +7,7 @@ import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 import java.util.Date;
-
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,11 +17,7 @@ public class HotelReviewResponse {
 
     double rating;
     String reviewText;
-
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     UserResponse user;
-
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     HotelResponse hotel;
 
     LocalDate reviewDate;
