@@ -1,7 +1,6 @@
 package com.example.booking_app.entity;
 
 import java.util.Date;
-import java.util.List;
 
 import jakarta.persistence.*;
 import jakarta.persistence.Entity;

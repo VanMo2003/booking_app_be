@@ -24,8 +24,8 @@ public class HotelSpecification {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
             if (name != null) {
-                predicates.add(
-                        criteriaBuilder.like(criteriaBuilder.lower(root.get("nameHotel")), "%" + name.toLowerCase() + "%"));
+                predicates.add(criteriaBuilder.like(
+                        criteriaBuilder.lower(root.get("nameHotel")), "%" + name.toLowerCase() + "%"));
             }
             if (address != null) {
                 predicates.add(criteriaBuilder.like(

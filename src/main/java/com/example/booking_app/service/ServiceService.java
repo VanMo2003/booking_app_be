@@ -1,22 +1,26 @@
 package com.example.booking_app.service;
 
+import java.util.List;
+
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.example.booking_app.dto.request.ServiceRequest;
 import com.example.booking_app.dto.response.ServiceResponse;
 import com.example.booking_app.entity.Hotel;
 import com.example.booking_app.entity.Service;
+import com.example.booking_app.entity.User;
 import com.example.booking_app.exception.AppException;
 import com.example.booking_app.exception.ErrorCode;
 import com.example.booking_app.mapper.HotelMapper;
 import com.example.booking_app.mapper.ServiceMapper;
 import com.example.booking_app.repository.HotelRepository;
 import com.example.booking_app.repository.ServiceRepository;
+import com.example.booking_app.repository.UserRepository;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.security.access.prepost.PreAuthorize;
-
-import java.util.List;
 
 @org.springframework.stereotype.Service
 @RequiredArgsConstructor
@@ -27,21 +31,26 @@ public class ServiceService {
     HotelRepository hotelRepository;
     ServiceMapper serviceMapper;
     HotelMapper hotelMapper;
+    UserRepository userRepository;
 
-    public List<ServiceResponse> getAllByHotel(Long id){
+    public List<ServiceResponse> getAllByHotel(Long id) {
         Hotel hotel = hotelRepository.findById(id).orElseThrow(() -> {
             throw new AppException(ErrorCode.HOTEL_NOT_EXISTED);
         });
-        List<ServiceResponse> serviceResponses = serviceRepository.findAllByHotel(hotel).stream().map(service ->
-                serviceMapper.toServiceResponse(service)).toList();
+        List<ServiceResponse> serviceResponses = serviceRepository.findAllByHotel(hotel).stream()
+                .map(service -> serviceMapper.toServiceResponse(service))
+                .toList();
 
         return serviceResponses;
     }
+
     @PreAuthorize("hasRole('HOTELIER')")
-    public ServiceResponse createService(ServiceRequest request){
-        Hotel hotel = hotelRepository.findById(request.getHotelId()).orElseThrow(() -> {
-            throw new AppException(ErrorCode.HOTEL_NOT_EXISTED);
-        });
+    public ServiceResponse createService(ServiceRequest request) {
+        var context = SecurityContextHolder.getContext();
+        String username = context.getAuthentication().getName();
+        User user =
+                userRepository.findByUsername(username).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        Hotel hotel = hotelRepository.findByUserId(user.getId()).orElseThrow();
 
         Service service = serviceMapper.toService(request);
         service.setHotel(hotel);
@@ -53,8 +62,9 @@ public class ServiceService {
 
         return serviceResponse;
     }
+
     @PreAuthorize("hasRole('HOTELIER')")
-    public ServiceResponse updateService(Long id, ServiceRequest request){
+    public ServiceResponse updateService(Long id, ServiceRequest request) {
 
         Service service = serviceRepository.findById(id).orElseThrow();
 
@@ -65,7 +75,7 @@ public class ServiceService {
         return serviceResponse;
     }
 
-    public void deleteService(Long id){
+    public void deleteService(Long id) {
         serviceRepository.deleteById(id);
     }
 }

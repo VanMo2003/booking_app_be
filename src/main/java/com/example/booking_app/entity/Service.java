@@ -1,6 +1,7 @@
 package com.example.booking_app.entity;
 
 import jakarta.persistence.*;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

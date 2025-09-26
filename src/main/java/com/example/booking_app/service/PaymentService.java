@@ -1,21 +1,25 @@
 package com.example.booking_app.service;
 
+import java.util.Map;
+
+import jakarta.servlet.http.HttpServletRequest;
+
+import org.springframework.stereotype.Service;
+
 import com.example.booking_app.config.VNPayConfig;
 import com.example.booking_app.dto.response.PaymentResponse;
 import com.example.booking_app.utils.VNPayUtil;
-import jakarta.servlet.http.HttpServletRequest;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.stereotype.Service;
-
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class PaymentService {
     VNPayConfig vnPayConfig;
+
     public PaymentResponse createVnPayPayment(HttpServletRequest request) {
         long amount = Integer.parseInt(request.getParameter("amount")) * 100L;
         String bankCode = request.getParameter("bankCode");
@@ -32,6 +36,8 @@ public class PaymentService {
         queryUrl += "&vnp_SecureHash=" + vnpSecureHash;
         String paymentUrl = vnPayConfig.getVnp_PayUrl() + "?" + queryUrl;
         return PaymentResponse.builder()
+                .code("oke")
+                .message("success")
                 .paymentUrl(paymentUrl)
                 .build();
     }

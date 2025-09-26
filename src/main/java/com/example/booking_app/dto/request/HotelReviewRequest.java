@@ -1,12 +1,9 @@
 package com.example.booking_app.dto.request;
 
+import java.util.Date;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.time.LocalDate;
-import java.util.Date;
-
 
 @Data
 @NoArgsConstructor

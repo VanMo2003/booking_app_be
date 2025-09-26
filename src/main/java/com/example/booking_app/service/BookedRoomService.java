@@ -1,12 +1,13 @@
 package com.example.booking_app.service;
 
-import com.example.booking_app.dto.request.BookRequest;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.example.booking_app.dto.request.BookedRoomRequest;
 import com.example.booking_app.dto.request.BookingRequest;
+import com.example.booking_app.dto.request.OrderRequest;
 import com.example.booking_app.dto.response.BookedRoomResponse;
 import com.example.booking_app.dto.response.BookingResponse;
-import com.example.booking_app.dto.response.RoomResponse;
-import com.example.booking_app.dto.response.ServiceResponse;
 import com.example.booking_app.entity.*;
 import com.example.booking_app.exception.AppException;
 import com.example.booking_app.exception.ErrorCode;
@@ -18,14 +19,10 @@ import com.example.booking_app.repository.BookedRoomRepository;
 import com.example.booking_app.repository.HotelRepository;
 import com.example.booking_app.repository.RoomRepository;
 import com.example.booking_app.repository.ServiceRepository;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 @org.springframework.stereotype.Service
 @RequiredArgsConstructor
@@ -41,14 +38,14 @@ public class BookedRoomService {
     RoomMapper roomMapper;
     ServiceMapper serviceMapper;
 
-    public BookingResponse createBookedRoom(BookRequest bookRequest){
-        BookedRoomRequest request = bookedRoomMapper.toBookedRoomRequest(bookRequest);
+    public BookingResponse createBookedRoom(OrderRequest orderRequest) {
+        BookedRoomRequest request = bookedRoomMapper.toBookedRoomRequest(orderRequest);
 
         Hotel hotel = hotelRepository.findById(request.getHotelId()).orElseThrow();
 
         if (!checkExistBookedRoom(request, hotel)) {
             BookedRoom bookedRoom = bookedRoomMapper.toBookedRoom(request);
-            BookingRequest bookingRequest = bookingMapper.toBookingRequest(bookRequest);
+            BookingRequest bookingRequest = bookingMapper.toBookingRequest(orderRequest);
 
             List<Room> rooms = new ArrayList<>();
             List<Service> services = new ArrayList<>();
@@ -56,20 +53,11 @@ public class BookedRoomService {
             if (!request.getRooms().isEmpty()) {
                 rooms = roomRepository.findAllById(request.getRooms());
 
-                if (rooms.isEmpty())
-                    throw new AppException(ErrorCode.ROOM_NOT_EXISTED);
-
-                for (Room room : rooms) {
-                    bookingRequest.setPrice(bookingRequest.getPrice() + room.getPrice());
-                }
+                if (rooms.isEmpty()) throw new AppException(ErrorCode.ROOM_NOT_EXISTED);
             }
             if (!request.getServices().isEmpty()) {
                 services = serviceRepository.findAllById(request.getServices());
-                if (services.isEmpty())
-                    throw new AppException(ErrorCode.SERVICE_NOT_EXISTED);
-                for (Service service : services) {
-                    bookingRequest.setPrice(bookingRequest.getPrice() + service.getPrice());
-                }
+                if (services.isEmpty()) throw new AppException(ErrorCode.SERVICE_NOT_EXISTED);
             }
 
             bookedRoom.setRooms(rooms);
@@ -80,9 +68,11 @@ public class BookedRoomService {
             BookingResponse bookingResponse = bookingService.createBookingService(bookingRequest, bookedRoom);
 
             BookedRoomResponse bookedRoomResponse = bookedRoomMapper.toBookedRoomResponse(bookedRoom);
-            bookedRoomResponse.setRooms(rooms.stream().map(room -> roomMapper.toRoomResponse(room)).toList());
-            bookedRoomResponse.setServices(services.stream().map(service -> serviceMapper.toServiceResponse(service)).toList());
-
+            bookedRoomResponse.setRooms(
+                    rooms.stream().map(room -> roomMapper.toRoomResponse(room)).toList());
+            bookedRoomResponse.setServices(services.stream()
+                    .map(service -> serviceMapper.toServiceResponse(service))
+                    .toList());
 
             return bookingResponse;
         }
@@ -91,12 +81,15 @@ public class BookedRoomService {
     }
 
     private boolean checkExistBookedRoom(BookedRoomRequest request, Hotel hotel) {
-//        List<BookedRoom> bookedRooms = bookedRoomRepository.findByArrivalDateOrDepartureDateAndHotel(request.getArrivalDate(), request.getDepartureDate(), hotel);
-        List<BookedRoom> bookedRooms = bookedRoomRepository.getAllBookedRoomIntersectArrivalDateAndDepartureDate(request.getArrivalDate(), request.getDepartureDate(), hotel.getId());
+        //        List<BookedRoom> bookedRooms =
+        // bookedRoomRepository.findByArrivalDateOrDepartureDateAndHotel(request.getArrivalDate(),
+        // request.getDepartureDate(), hotel);
+        List<BookedRoom> bookedRooms = bookedRoomRepository.getAllBookedRoomIntersectArrivalDateAndDepartureDate(
+                request.getArrivalDate(), request.getDepartureDate(), hotel.getId());
 
-        for (BookedRoom bookedRoom: bookedRooms) {
-            for (Room room: bookedRoom.getRooms()) {
-                if (request.getRooms().contains(room.getId())){
+        for (BookedRoom bookedRoom : bookedRooms) {
+            for (Room room : bookedRoom.getRooms()) {
+                if (request.getRooms().contains(room.getId())) {
                     return true;
                 }
             }

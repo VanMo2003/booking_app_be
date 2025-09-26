@@ -3,21 +3,20 @@ package com.example.booking_app.service;
 import java.util.List;
 import java.util.Objects;
 
-import com.example.booking_app.dto.request.UserUpdateRequest;
-import com.example.booking_app.dto.response.RoleResponse;
-import com.example.booking_app.entity.Role;
-import com.example.booking_app.mapper.RoleMapper;
-import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.booking_app.dto.request.UserCreationRequest;
+import com.example.booking_app.dto.request.UserUpdateRequest;
+import com.example.booking_app.dto.response.RoleResponse;
 import com.example.booking_app.dto.response.UserResponse;
+import com.example.booking_app.entity.Role;
 import com.example.booking_app.entity.User;
 import com.example.booking_app.exception.AppException;
 import com.example.booking_app.exception.ErrorCode;
+import com.example.booking_app.mapper.RoleMapper;
 import com.example.booking_app.mapper.UserMapper;
 import com.example.booking_app.repository.RoleRepository;
 import com.example.booking_app.repository.UserRepository;
@@ -62,6 +61,7 @@ public class UserService {
 
         return userResponse;
     }
+
     @PreAuthorize("hasRole('ADMIN')")
     public UserResponse getUserById(String id) {
         User user = userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
@@ -70,6 +70,7 @@ public class UserService {
 
         return userResponse;
     }
+
     public UserResponse getMyInfo() {
         var context = SecurityContextHolder.getContext();
         String username = context.getAuthentication().getName();
@@ -91,18 +92,17 @@ public class UserService {
         userMapper.updateUser(user, request);
         if (!Objects.isNull(request.getPassword())) user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-
-
         UserResponse userResponse = userMapper.toUserResponse(userRepository.save(user));
         userResponse.setRole(roleMapper.toRoleResponse(user.getRole()));
 
         return userResponse;
     }
 
-    public boolean checkExistUser(String username){
+    public boolean checkExistUser(String username) {
         boolean exists = userRepository.existsByUsername(username);
         return exists;
     }
+
     @PreAuthorize("hasRole('ADMIN')")
     public void deleteUserById(String id) {
         userRepository.deleteById(id);

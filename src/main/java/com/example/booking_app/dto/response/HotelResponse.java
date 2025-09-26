@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 @NoArgsConstructor
@@ -20,8 +21,10 @@ public class HotelResponse {
     String address;
     String description;
     double rating;
+
     @JsonInclude(JsonInclude.Include.NON_NULL)
     UserResponse user;
+
     List<RoomResponse> rooms;
 
     List<ServiceResponse> services;

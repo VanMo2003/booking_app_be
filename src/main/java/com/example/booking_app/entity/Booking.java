@@ -1,12 +1,11 @@
 package com.example.booking_app.entity;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Date;
 
-import com.example.booking_app.constant.PaymentMethod;
 import jakarta.persistence.*;
 
+import com.example.booking_app.constant.PaymentMethod;
 import com.example.booking_app.constant.StatusOrder;
 
 import lombok.*;
@@ -32,13 +31,13 @@ public class Booking {
     @Enumerated(EnumType.STRING)
     PaymentMethod paymentMethod;
 
-
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     User user;
 
     @OneToOne
     BookedRoom bookedRoom;
+
     double price;
 
     Date onCreate;

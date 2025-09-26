@@ -1,11 +1,10 @@
 package com.example.booking_app.dto.request;
 
+import java.time.LocalDate;
+import java.util.Date;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 @Getter
 @Setter

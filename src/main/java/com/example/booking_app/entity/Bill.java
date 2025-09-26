@@ -1,12 +1,14 @@
 package com.example.booking_app.entity;
 
-import com.example.booking_app.constant.PaymentMethod;
-import jakarta.persistence.*;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
-
 import java.time.LocalDate;
 import java.util.Date;
+
+import jakarta.persistence.*;
+
+import com.example.booking_app.constant.PaymentMethod;
+
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Entity
 @Getter
