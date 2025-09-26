@@ -11,7 +11,6 @@ import com.example.booking_app.dto.request.RefreshTokenRequest;
 import com.example.booking_app.dto.response.ApiResponse;
 import com.example.booking_app.dto.response.AuthenticationResponse;
 import com.example.booking_app.dto.response.IntrospectResponse;
-import com.example.booking_app.repository.HotelRepository;
 import com.example.booking_app.service.AuthenticationService;
 import com.nimbusds.jose.JOSEException;
 
@@ -25,7 +24,6 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthenticationController {
     AuthenticationService authenticationService;
-    HotelRepository hotelRepository;
 
     @PostMapping("/login")
     ApiResponse<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {

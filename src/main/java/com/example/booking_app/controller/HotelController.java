@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 @RestController
-@RequestMapping("/hotels")
+@RequestMapping("/hotel")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class HotelController {
@@ -28,10 +28,24 @@ public class HotelController {
                 .build();
     }
 
+    @GetMapping("/getHotelMySelf")
+    ApiResponse<HotelResponse> getHotelMySelf() {
+        return ApiResponse.<HotelResponse>builder()
+                .data(hotelService.getHotelMySelf())
+                .build();
+    }
+
     @PostMapping
     ApiResponse<HotelResponse> createHotel(@RequestBody HotelRequest request) {
         return ApiResponse.<HotelResponse>builder()
                 .data(hotelService.createHotel(request))
+                .build();
+    }
+
+    @GetMapping("/{id}")
+    ApiResponse<HotelResponse> getHotelById(@PathVariable Long id) {
+        return ApiResponse.<HotelResponse>builder()
+                .data(hotelService.getHotelById(id))
                 .build();
     }
 

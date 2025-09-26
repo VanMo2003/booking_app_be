@@ -1,7 +1,7 @@
 package com.example.booking_app.service;
 
-import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -9,10 +9,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.booking_app.dto.request.UserCreationRequest;
+import com.example.booking_app.dto.request.UserUpdateRequest;
+import com.example.booking_app.dto.response.RoleResponse;
 import com.example.booking_app.dto.response.UserResponse;
+import com.example.booking_app.entity.Role;
 import com.example.booking_app.entity.User;
 import com.example.booking_app.exception.AppException;
 import com.example.booking_app.exception.ErrorCode;
+import com.example.booking_app.mapper.RoleMapper;
 import com.example.booking_app.mapper.UserMapper;
 import com.example.booking_app.repository.RoleRepository;
 import com.example.booking_app.repository.UserRepository;
@@ -29,12 +33,15 @@ public class UserService {
     RoleRepository roleRepository;
     PasswordEncoder passwordEncoder;
     UserMapper userMapper;
+    RoleMapper roleMapper;
 
     @PreAuthorize("hasRole('ADMIN')")
     public List<UserResponse> getAllUsers() {
         return userRepository.findAll().stream()
                 .map(user -> {
                     UserResponse userResponse = userMapper.toUserResponse(user);
+                    RoleResponse roleResponse = roleMapper.toRoleResponse(user.getRole());
+                    userResponse.setRole(roleResponse);
                     return userResponse;
                 })
                 .toList();
@@ -46,19 +53,24 @@ public class UserService {
         User user = userMapper.toUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
-        var roles = roleRepository.findAllById(request.getRoles());
-        user.setRoles(new HashSet<>(roles));
+        Role role = roleRepository.findById(request.getRole()).orElseThrow();
+        user.setRole(role);
 
-        return userMapper.toUserResponse(userRepository.save(user));
+        UserResponse userResponse = userMapper.toUserResponse(userRepository.save(user));
+        userResponse.setRole(roleMapper.toRoleResponse(role));
+
+        return userResponse;
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     public UserResponse getUserById(String id) {
-        UserResponse userResponse = userMapper.toUserResponse(
-                userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED)));
+        User user = userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        UserResponse userResponse = userMapper.toUserResponse(user);
+        userResponse.setRole(roleMapper.toRoleResponse(user.getRole()));
 
         return userResponse;
     }
+
     public UserResponse getMyInfo() {
         var context = SecurityContextHolder.getContext();
         String username = context.getAuthentication().getName();
@@ -66,15 +78,32 @@ public class UserService {
                 userRepository.findByUsername(username).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         UserResponse userResponse = userMapper.toUserResponse(user);
+        userResponse.setRole(roleMapper.toRoleResponse(user.getRole()));
 
         return userResponse;
     }
 
-    public boolean checkExistUser(String username){
+    public UserResponse updateMyInfo(UserUpdateRequest request) {
+        var context = SecurityContextHolder.getContext();
+        String username = context.getAuthentication().getName();
+        User user =
+                userRepository.findByUsername(username).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        userMapper.updateUser(user, request);
+        if (!Objects.isNull(request.getPassword())) user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        UserResponse userResponse = userMapper.toUserResponse(userRepository.save(user));
+        userResponse.setRole(roleMapper.toRoleResponse(user.getRole()));
+
+        return userResponse;
+    }
+
+    public boolean checkExistUser(String username) {
         boolean exists = userRepository.existsByUsername(username);
         return exists;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteUserById(String id) {
         userRepository.deleteById(id);
     }

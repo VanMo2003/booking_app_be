@@ -2,7 +2,6 @@ package com.example.booking_app.dto.request;
 
 import java.time.LocalDate;
 import java.util.Date;
-import java.util.List;
 
 import com.example.booking_app.validator.DobConstraint;
 
@@ -25,7 +24,6 @@ public class UserUpdateRequest {
 
     String birthPlace;
     String address;
-    List<String> roles;
     boolean active = true;
     Date onUpdate = new Date();
 }

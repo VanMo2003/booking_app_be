@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.booking_app.dto.request.UserCreationRequest;
+import com.example.booking_app.dto.request.UserUpdateRequest;
 import com.example.booking_app.dto.response.ApiResponse;
 import com.example.booking_app.dto.response.UserResponse;
 import com.example.booking_app.service.UserService;
@@ -16,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/user")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserController {
@@ -42,14 +43,24 @@ public class UserController {
         response.setData(userService.getUserById(userId));
         return response;
     }
+
     @GetMapping("/myInfo")
     ApiResponse<UserResponse> getMyInfo() {
         return ApiResponse.<UserResponse>builder().data(userService.getMyInfo()).build();
     }
 
+    @PutMapping("/updateMyInfo")
+    ApiResponse<UserResponse> updateMyInfo(@RequestBody UserUpdateRequest request) {
+        return ApiResponse.<UserResponse>builder()
+                .data(userService.updateMyInfo(request))
+                .build();
+    }
+
     @GetMapping("/checkExistUser/{username}")
     ApiResponse<Boolean> checkExistUser(@PathVariable String username) {
-        return ApiResponse.<Boolean>builder().data(userService.checkExistUser(username)).build();
+        return ApiResponse.<Boolean>builder()
+                .data(userService.checkExistUser(username))
+                .build();
     }
 
     @DeleteMapping("{userId}")

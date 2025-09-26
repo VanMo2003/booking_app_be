@@ -1,6 +1,5 @@
 package com.example.booking_app.dto.request;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Date;
 

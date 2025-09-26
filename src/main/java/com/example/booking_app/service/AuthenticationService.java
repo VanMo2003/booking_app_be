@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.Optional;
 import java.util.StringJoiner;
 import java.util.UUID;
 
@@ -22,6 +23,7 @@ import com.example.booking_app.dto.request.RefreshTokenRequest;
 import com.example.booking_app.dto.response.AuthenticationResponse;
 import com.example.booking_app.dto.response.IntrospectResponse;
 import com.example.booking_app.entity.InvalidatedToken;
+import com.example.booking_app.entity.Role;
 import com.example.booking_app.entity.User;
 import com.example.booking_app.exception.AppException;
 import com.example.booking_app.exception.ErrorCode;
@@ -53,6 +55,7 @@ public class AuthenticationService {
     static Logger log = LoggerFactory.getLogger(AuthenticationService.class);
     UserRepository userRepository;
     InvalidatedRepository invalidatedRepository;
+
 
     @NonFinal
     @Value("${jwt.signer-key}")
@@ -164,12 +167,12 @@ public class AuthenticationService {
 
     private String buildScope(User user) {
         StringJoiner stringJoiner = new StringJoiner(" ");
-        if (!CollectionUtils.isEmpty(user.getRoles()))
-            user.getRoles().forEach(role -> {
-                stringJoiner.add("ROLE_" + role.getName());
-                if (!CollectionUtils.isEmpty(role.getPermissions()))
-                    role.getPermissions().forEach(permission -> stringJoiner.add(permission.getName()));
-            });
+        Optional<Role> role = Optional.ofNullable(user.getRole());
+        if (role.isPresent()) {
+            stringJoiner.add("ROLE_" + role.get().getName());
+            if (!CollectionUtils.isEmpty(role.get().getPermissions()))
+                role.get().getPermissions().forEach(permission -> stringJoiner.add(permission.getName()));
+        }
 
         return stringJoiner.toString();
     }

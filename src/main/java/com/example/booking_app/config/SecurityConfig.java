@@ -27,9 +27,9 @@ public class SecurityConfig {
     @Value("${jwt.signer-key}")
     private String SIGNER_KEY;
 
-    private final String[] PUBLIC_ENDPOINT_GET = {"/users/checkExistUser/{}", "/storage/{}"};
+    private final String[] PUBLIC_ENDPOINT_GET = {"/user/checkExistUser/{}", "/storage/{}"};
     private final String[] PUBLIC_ENDPOINT_POST = {
-        "/users", "/auth/login", "/auth/introspect", "/auth/logout", "/auth/refreshToken", "/storage/upload"
+        "/user", "/auth/login", "/auth/introspect", "/auth/logout", "/auth/refreshToken", "/storage/upload"
     };
 
     private final CustomJwtDecoder customJwtDecoder;
