@@ -28,18 +28,27 @@ public class HotelController {
                 .build();
     }
 
+    @GetMapping("/getHotelMySelf")
+    ApiResponse<HotelResponse> getHotelMySelf() {
+        return ApiResponse.<HotelResponse>builder()
+                .data(hotelService.getHotelMySelf())
+                .build();
+    }
+
     @PostMapping
     ApiResponse<HotelResponse> createHotel(@RequestBody HotelRequest request) {
         return ApiResponse.<HotelResponse>builder()
                 .data(hotelService.createHotel(request))
                 .build();
     }
+
     @GetMapping("/{id}")
     ApiResponse<HotelResponse> getHotelById(@PathVariable Long id) {
         return ApiResponse.<HotelResponse>builder()
                 .data(hotelService.getHotelById(id))
                 .build();
     }
+
     @PutMapping("/{id}")
     ApiResponse<HotelResponse> updateHotel(@PathVariable Long id, @RequestBody HotelRequest request) {
         return ApiResponse.<HotelResponse>builder()

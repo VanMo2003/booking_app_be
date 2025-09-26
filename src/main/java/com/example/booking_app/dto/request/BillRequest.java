@@ -1,12 +1,12 @@
 package com.example.booking_app.dto.request;
 
-import com.example.booking_app.constant.PaymentMethod;
-import com.example.booking_app.entity.Booking;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
-
 import java.time.LocalDate;
 import java.util.Date;
+
+import com.example.booking_app.constant.PaymentMethod;
+
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @NoArgsConstructor

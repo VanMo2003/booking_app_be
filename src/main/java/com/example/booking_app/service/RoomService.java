@@ -1,27 +1,26 @@
 package com.example.booking_app.service;
 
+import java.util.List;
+
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.example.booking_app.dto.request.RoomRequest;
-import com.example.booking_app.dto.request.ServiceRequest;
 import com.example.booking_app.dto.response.RoomResponse;
-import com.example.booking_app.dto.response.ServiceResponse;
 import com.example.booking_app.entity.Hotel;
 import com.example.booking_app.entity.Room;
-import com.example.booking_app.entity.Service;
+import com.example.booking_app.entity.User;
 import com.example.booking_app.exception.AppException;
 import com.example.booking_app.exception.ErrorCode;
 import com.example.booking_app.mapper.HotelMapper;
 import com.example.booking_app.mapper.RoomMapper;
-import com.example.booking_app.mapper.ServiceMapper;
 import com.example.booking_app.repository.HotelRepository;
 import com.example.booking_app.repository.RoomRepository;
-import com.example.booking_app.repository.ServiceRepository;
+import com.example.booking_app.repository.UserRepository;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.security.access.prepost.PreAuthorize;
-
-import java.util.List;
 
 @org.springframework.stereotype.Service
 @RequiredArgsConstructor
@@ -31,21 +30,26 @@ public class RoomService {
     HotelRepository hotelRepository;
     RoomMapper roomMapper;
     HotelMapper hotelMapper;
+    UserRepository userRepository;
 
-    public List<RoomResponse> getAllByHotel(Long id){
+    public List<RoomResponse> getAllByHotel(Long id) {
         Hotel hotel = hotelRepository.findById(id).orElseThrow(() -> {
             throw new AppException(ErrorCode.HOTEL_NOT_EXISTED);
         });
-        List<RoomResponse> roomServices = roomRepository.findAllByHotel(hotel).stream().map(room ->
-                roomMapper.toRoomResponse(room)).toList();
+        List<RoomResponse> roomResponses = roomRepository.findAllByHotel(hotel).stream()
+                .map(room -> roomMapper.toRoomResponse(room))
+                .toList();
 
-        return roomServices;
+        return roomResponses;
     }
+
     @PreAuthorize("hasRole('HOTELIER')")
-    public RoomResponse createRoom(RoomRequest request){
-        Hotel hotel = hotelRepository.findById(request.getHotelId()).orElseThrow(() -> {
-            throw new AppException(ErrorCode.HOTEL_NOT_EXISTED);
-        });
+    public RoomResponse createRoom(RoomRequest request) {
+        var context = SecurityContextHolder.getContext();
+        String username = context.getAuthentication().getName();
+        User user =
+                userRepository.findByUsername(username).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        Hotel hotel = hotelRepository.findByUserId(user.getId()).orElseThrow();
 
         Room room = roomMapper.toRoom(request);
         room.setHotel(hotel);
@@ -57,8 +61,9 @@ public class RoomService {
 
         return roomResponse;
     }
+
     @PreAuthorize("hasRole('HOTELIER')")
-    public RoomResponse updateRoom(Long id, RoomRequest request){
+    public RoomResponse updateRoom(Long id, RoomRequest request) {
 
         Room room = roomRepository.findById(id).orElseThrow();
 
@@ -69,7 +74,7 @@ public class RoomService {
         return roomResponse;
     }
 
-    public void deleteRoom(Long id){
+    public void deleteRoom(Long id) {
         roomRepository.deleteById(id);
     }
 }

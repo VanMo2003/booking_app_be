@@ -1,22 +1,22 @@
 package com.example.booking_app.dto.request;
 
-
-import com.example.booking_app.constant.PaymentMethod;
-import com.example.booking_app.constant.StatusOrder;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
-
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+
+import com.example.booking_app.constant.PaymentMethod;
+import com.example.booking_app.constant.StatusOrder;
+
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class BookRequest {
+public class OrderRequest {
     LocalDate bookingDate = LocalDate.now();
 
     StatusOrder statusOrder = StatusOrder.PENDING;
@@ -28,7 +28,7 @@ public class BookRequest {
     Set<Long> services = new HashSet<>();
     String note;
     Long hotelId;
-    double price = 0.0;
+    double price;
     boolean isCheckedIn = false;
     boolean isCheckedOut = false;
 

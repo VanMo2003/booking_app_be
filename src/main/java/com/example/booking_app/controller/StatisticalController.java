@@ -1,16 +1,17 @@
 package com.example.booking_app.controller;
 
+import java.util.List;
+
+import org.springframework.web.bind.annotation.*;
+
 import com.example.booking_app.dto.request.StatisticalRequest;
 import com.example.booking_app.dto.response.ApiResponse;
 import com.example.booking_app.dto.response.StatisticalResponse;
-import com.example.booking_app.dto.response.UserResponse;
 import com.example.booking_app.service.StatisticalService;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/statistical")

@@ -3,20 +3,25 @@ package com.example.booking_app.service;
 import java.util.List;
 import java.util.Objects;
 
-import com.example.booking_app.dto.response.RoomResponse;
-import com.example.booking_app.dto.response.ServiceResponse;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.example.booking_app.dto.request.HotelRequest;
 import com.example.booking_app.dto.response.HotelResponse;
+import com.example.booking_app.dto.response.RoomResponse;
+import com.example.booking_app.dto.response.ServiceResponse;
 import com.example.booking_app.entity.Hotel;
 import com.example.booking_app.entity.User;
 import com.example.booking_app.exception.AppException;
 import com.example.booking_app.exception.ErrorCode;
 import com.example.booking_app.mapper.HotelMapper;
+import com.example.booking_app.mapper.RoomMapper;
+import com.example.booking_app.mapper.ServiceMapper;
 import com.example.booking_app.mapper.UserMapper;
 import com.example.booking_app.repository.HotelRepository;
+import com.example.booking_app.repository.RoomRepository;
+import com.example.booking_app.repository.ServiceRepository;
 import com.example.booking_app.repository.UserRepository;
 import com.example.booking_app.specification.HotelSpecification;
 
@@ -34,10 +39,21 @@ public class HotelService {
     RoomService roomService;
     HotelMapper hotelMapper;
     UserMapper userMapper;
+    RoomRepository roomRepository;
+    RoomMapper roomMapper;
+    ServiceMapper serviceMapper;
+
+    ServiceRepository serviceRepository;
 
     public List<HotelResponse> getAllHotel() {
         return hotelRepository.findAll().stream()
-                .map(hotel -> hotelMapper.toHotelResponse(hotel))
+                .map(hotel -> {
+                    HotelResponse hotelResponse = hotelMapper.toHotelResponse(hotel);
+                    hotelResponse.setRooms(roomService.getAllByHotel(hotel.getId()));
+                    hotelResponse.setServices(serviceService.getAllByHotel(hotel.getId()));
+
+                    return hotelResponse;
+                })
                 .toList();
     }
 
@@ -58,7 +74,26 @@ public class HotelService {
         return hotelResponse;
     }
 
-    public HotelResponse getHotelById(Long id){
+    public HotelResponse getHotelMySelf() {
+        var context = SecurityContextHolder.getContext();
+        String username = context.getAuthentication().getName();
+        User user =
+                userRepository.findByUsername(username).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        Hotel hotel = hotelRepository.findByUserId(user.getId()).orElseThrow();
+
+        HotelResponse hotelResponse = hotelMapper.toHotelResponse(hotel);
+        hotelResponse.setRooms(roomRepository.findAllByHotel(hotel).stream()
+                .map(room -> roomMapper.toRoomResponse(room))
+                .toList());
+        hotelResponse.setServices(serviceRepository.findAllByHotel(hotel).stream()
+                .map(service -> serviceMapper.toServiceResponse(service))
+                .toList());
+
+        return hotelResponse;
+    }
+
+    public HotelResponse getHotelById(Long id) {
         Hotel hotel = hotelRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.HOTEL_NOT_EXISTED));
 
         List<ServiceResponse> serviceResponses = serviceService.getAllByHotel(id);
@@ -68,7 +103,7 @@ public class HotelService {
         hotelResponse.setServices(serviceResponses);
         hotelResponse.setRooms(roomResponses);
 
-        return  hotelResponse;
+        return hotelResponse;
     }
 
     public HotelResponse updateHotel(Long id, HotelRequest request) {
